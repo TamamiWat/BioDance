@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f7a6ffab358ea804d9fcfa09cb819855
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - m_mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  - m_instanceMaterial: {fileID: 2100000, guid: cc71b18a21704d545a1415ca0776cb1d, type: 2}
+  - m_particleCalclator: {fileID: 7200000, guid: 7bcabf0769c694a409e5c82a7dcfe542, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
