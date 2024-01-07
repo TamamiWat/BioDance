@@ -7,23 +7,23 @@ using System.Runtime.InteropServices;
 public class BallRenderer : MonoBehaviour
 {
     //Parameters
-    [Header("DrawMeshInstancedIndirect‚Ìƒpƒ‰ƒ[ƒ^")]
-    [SerializeField] private Mesh m_mesh; //•`‰æ‚·‚éƒƒbƒVƒ…
-    [SerializeField] private Material m_instanceMaterial; //g—p‚·‚éƒ}ƒeƒŠƒAƒ‹
-    [SerializeField] private Bounds m_bounds; //•`‰æ‚·‚éƒƒbƒVƒ…‚Ì‹«ŠE
-    [SerializeField] private ShadowCastingMode m_shadowCastingMode; //‰e‚ÌƒLƒƒƒXƒeƒBƒ“ƒOƒ‚[ƒh
-    [SerializeField] private bool m_receiveShadows; //‰e‚ğó‚¯æ‚é‚©‚Ç‚¤‚©
+    [Header("DrawMeshInstancedIndirectã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿")]
+    [SerializeField] private Mesh m_mesh; //æç”»ã™ã‚‹ãƒ¡ãƒƒã‚·ãƒ¥
+    [SerializeField] private Material m_instanceMaterial; //ä½¿ç”¨ã™ã‚‹ãƒãƒ†ãƒªã‚¢ãƒ«
+    [SerializeField] private Bounds m_bounds; //æç”»ã™ã‚‹ãƒ¡ãƒƒã‚·ãƒ¥ã®å¢ƒç•Œ
+    [SerializeField] private ShadowCastingMode m_shadowCastingMode; //å½±ã®ã‚­ãƒ£ã‚¹ãƒ†ã‚£ãƒ³ã‚°ãƒ¢ãƒ¼ãƒ‰
+    [SerializeField] private bool m_receiveShadows; //å½±ã‚’å—ã‘å–ã‚‹ã‹ã©ã†ã‹
 
     [Space(20)]
-    [SerializeField] private int m_instanceCount; //ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì”
-    [SerializeField] private ComputeShader m_particleCalclator; //ƒp[ƒeƒBƒNƒ‹‚ÌˆÊ’uŒvZ‚Ég—p‚·‚éƒRƒ“ƒsƒ…[ƒgƒVƒF[ƒ_
+    [SerializeField] private int m_instanceCount; //ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®æ•°
+    [SerializeField] private ComputeShader m_particleCalclator; //ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®ä½ç½®è¨ˆç®—ã«ä½¿ç”¨ã™ã‚‹ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ãƒˆã‚·ã‚§ãƒ¼ãƒ€
 
-    [Header("ƒp[ƒeƒBƒNƒ‹İ’è")]
+    [Header("ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«è¨­å®š")]
     [Space(20)]
-    [SerializeField] private float m_range; //”ÍˆÍ
-    [SerializeField] private float m_scale; //ƒXƒP[ƒ‹
-    [SerializeField] private Color m_color; //F
-    [SerializeField] private float m_particleVelocity; //‘¬“x
+    [SerializeField] private float m_range; //ç¯„å›²
+    [SerializeField] private float m_scale; //ã‚¹ã‚±ãƒ¼ãƒ«
+    [SerializeField] private Color m_color; //è‰²
+    [SerializeField] private float m_particleVelocity; //é€Ÿåº¦
 
     private int m_calcParticlePositionKernel;
     private Vector3Int m_calcParticlePositionGroupSize;
@@ -38,9 +38,9 @@ public class BallRenderer : MonoBehaviour
     private readonly int m_DeltaTimePropId = Shader.PropertyToID("_DeltaTime");
     struct Particle
     {
-        public Vector3 position;//ˆÊ’u
-        public Vector4 color;//F
-        public float scale;//ƒXƒP[ƒ‹
+        public Vector3 position;//ä½ç½®
+        public Vector4 color;//è‰²
+        public float scale;//ã‚¹ã‚±ãƒ¼ãƒ«
 
     }
 
@@ -53,8 +53,7 @@ public class BallRenderer : MonoBehaviour
         InitializeParticleBuffer();
         InitializeVelocityBuffer();
         SetUpParticleCalclator();
-
-
+        m_materialPropertyBlock.SetColor("_Color", Random.ColorHSV());
     }
 
     // Update is called once per frame
@@ -65,14 +64,13 @@ public class BallRenderer : MonoBehaviour
                                      m_calcParticlePositionGroupSize.x,
                                      m_calcParticlePositionGroupSize.y,
                                      m_calcParticlePositionGroupSize.z);
-        m_materialPropertyBlock.SetVectorArray("_Color", );
     }
 
     // Update is called once per frame
-    //UpdateŠÖ”‚ªŒÄ‚Ño‚³‚ê‚½Œã‚ÉÀs‚³‚ê‚é
+    //Updateé–¢æ•°ãŒå‘¼ã³å‡ºã•ã‚ŒãŸå¾Œã«å®Ÿè¡Œã•ã‚Œã‚‹
     void LateUpdate()
     {
-        //GPUƒCƒ“ƒXƒ^ƒ“ƒVƒ“ƒO
+        //GPUã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚·ãƒ³ã‚°
         Graphics.DrawMeshInstancedIndirect(
             m_mesh,
             0,
@@ -87,7 +85,7 @@ public class BallRenderer : MonoBehaviour
 
     }
     
-    //•`‰æ‚É•K—v‚Èƒoƒbƒtƒ@‚ğ‰Šú‰»
+    //æç”»ã«å¿…è¦ãªãƒãƒƒãƒ•ã‚¡ã‚’åˆæœŸåŒ–
     private void InitializeArgsBuffer()
     {
 
@@ -103,7 +101,7 @@ public class BallRenderer : MonoBehaviour
 
     }
 
-    //ƒp[ƒeƒBƒNƒ‹ƒf[ƒ^‚ğ•Û‚·‚éƒoƒbƒtƒ@‚ğ‰Šú‰»
+    //ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ãƒ‡ãƒ¼ã‚¿ã‚’ä¿æŒã™ã‚‹ãƒãƒƒãƒ•ã‚¡ã‚’åˆæœŸåŒ–
     private void InitializeParticleBuffer()
     {
 
@@ -112,7 +110,7 @@ public class BallRenderer : MonoBehaviour
         for (int i = 0; i < m_instanceCount; ++i)
         {
             particles[i].position = RandomVector(-m_range, m_range);
-            particles[i].color = m_color;
+            particles[i].color = Random.ColorHSV();
             particles[i].scale = m_scale;
         }
 
@@ -122,7 +120,7 @@ public class BallRenderer : MonoBehaviour
         m_instanceMaterial.SetBuffer("_ParticleBuffer", m_particleBuffer);
     }
 
-    //ƒp[ƒeƒBƒNƒ‹‚Ì‘¬“x‚ğ•Û‚·‚éƒoƒbƒtƒ@‚ğ‰Šú‰»
+    //ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®é€Ÿåº¦ã‚’ä¿æŒã™ã‚‹ãƒãƒƒãƒ•ã‚¡ã‚’åˆæœŸåŒ–
     private void InitializeVelocityBuffer()
     {
 
@@ -130,8 +128,8 @@ public class BallRenderer : MonoBehaviour
 
         for (int i = 0; i < m_instanceCount; ++i)
         {
-            // Random.onUnitySphere:”¼Œa1‚Ì‹…–Êã‚Ìƒ‰ƒ“ƒ_ƒ€‚È“_‚ğ•Ô‚·
-            // ‚Â‚Ü‚èA‘å‚«‚³m_particleVelocity‚Ìƒ‰ƒ“ƒ_ƒ€‚ÈƒxƒNƒgƒ‹‚ğŒvZ
+            // Random.onUnitySphere:åŠå¾„1ã®çƒé¢ä¸Šã®ãƒ©ãƒ³ãƒ€ãƒ ãªç‚¹ã‚’è¿”ã™
+            // ã¤ã¾ã‚Šã€å¤§ãã•m_particleVelocityã®ãƒ©ãƒ³ãƒ€ãƒ ãªãƒ™ã‚¯ãƒˆãƒ«ã‚’è¨ˆç®—
             velocities[i] = Random.onUnitSphere * m_particleVelocity;
         }
 
@@ -141,7 +139,7 @@ public class BallRenderer : MonoBehaviour
 
     }
 
-    //ƒRƒ“ƒsƒ…[ƒgƒVƒF[ƒ_‚Ìİ’è
+    //ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ãƒˆã‚·ã‚§ãƒ¼ãƒ€ã®è¨­å®š
     private void SetUpParticleCalclator()
     {
 
@@ -171,7 +169,7 @@ public class BallRenderer : MonoBehaviour
 
     }
 
-    // —Ìˆæ‚Ì‰ğ•ú
+    // é ˜åŸŸã®è§£æ”¾
     private void OnDisable()
     {
 
