@@ -356,6 +356,9 @@
 -analyzer:"C:/Program Files/Unity/Hub/Editor/2022.3.5f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll"
 -analyzer:"C:/Program Files/Unity/Hub/Editor/2022.3.5f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 "Assets/Scripts/BallRenderer.cs"
+"Assets/Scripts/Boids.cs"
+"Assets/Scripts/BoidsRender.cs"
+"Assets/Scripts/TapTest.cs"
 -langversion:9.0
 
 /deterministic
