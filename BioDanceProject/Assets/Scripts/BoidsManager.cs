@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using UnityEngine.EventSystems;
 
 namespace BoidsSimulation
 {
@@ -67,6 +68,9 @@ namespace BoidsSimulation
         ComputeBuffer _boidForceBuffer;
         ComputeBuffer _boidDataBuffer;
         private float m_range;
+
+        Vector3 m_tapPos;
+        Vector3 m_dragPos;
         #endregion
 
         #region Accessors
@@ -168,6 +172,11 @@ namespace BoidsSimulation
             boidCS.SetVector("_FrameCenter", m_FrameCenter);
             boidCS.SetVector("_FrameSize", m_FrameSize);
             boidCS.SetFloat("_FrameRadius", m_FrameRadius);
+            if(Input.GetMouseButtonDown(0))
+            {
+                boidCS.SetVector("_TapPos", m_tapPos);
+            }
+            
             boidCS.SetFloat("_AvoidFrameWeight", m_AvoidFrameWeight);
             boidCS.SetFloat("_CohesionAngle", m_CohesionAngle);
             boidCS.SetFloat("_AlignmentAngle", m_AligmentAngle);

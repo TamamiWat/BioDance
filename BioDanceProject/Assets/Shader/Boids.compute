@@ -52,6 +52,9 @@ float4 _FrameSize;        //frame size
 
 float _FrameRadius; //Sphere Frame Radius
 
+//User Position
+float3 _TapPos;
+float3 _DragPos;
 
 /**
 ***Functions
