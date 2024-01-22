@@ -10,9 +10,18 @@ public class TapTest : MonoBehaviour
     void Update()
     {
         mousePosition = Input.mousePosition;
-        if(Input.GetMouseButtonUp(0))
+
+        Debug.Log("Screen position : " + mousePosition);
+        mousePosition.z = 100f;
+
+        mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
+
+        Debug.Log("World position : " + mousePosition);
+        transform.localPosition = mousePosition; 
+        
+        /*if(Input.GetMouseButtonUp(0))
         {
             Debug.Log(mousePosition);
-        }
+        }*/
     }
 }
