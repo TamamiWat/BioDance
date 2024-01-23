@@ -133,7 +133,10 @@ GameObject:
   m_Component:
   - component: {fileID: 625800789}
   - component: {fileID: 625800788}
+<<<<<<< HEAD
   - component: {fileID: 625800790}
+=======
+>>>>>>> origin/lab
   m_Layer: 0
   m_Name: Boids
   m_TagString: Untagged
@@ -154,6 +157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_MaxObjectNum: 16384
+<<<<<<< HEAD
   m_CohesionNeighborRadius: 2
   m_AlignmentNeighborRadius: 2
   m_SeparationNeighborRadius: 1
@@ -170,6 +174,23 @@ MonoBehaviour:
   m_FrameCenter: {x: 0, y: 0, z: 0}
   m_FrameSize: {x: 32, y: 32, z: 32}
   m_FrameRadius: 15
+=======
+  m_CohesionNeighborRadius: 0.8
+  m_AlignmentNeighborRadius: 0.5
+  m_SeparationNeighborRadius: 0.03
+  m_MaxSpeed: 5
+  m_MaxSteerForce: 0.5
+  m_MinSpeed: 0.5
+  m_CohesionWeight: 0.005
+  m_AlignmentWeight: 0.01
+  m_SeparationWeight: 0.5
+  m_AvoidFrameWeight: 0.2
+  m_CohesionAngle: 1.5
+  m_AligmentAngle: 1.5
+  m_SeparationAngle: 1.5
+  m_FrameCenter: {x: 0, y: 0, z: -500}
+  m_FrameSize: {x: 1920, y: 1080, z: 1000}
+>>>>>>> origin/lab
   BoidsCS: {fileID: 7200000, guid: 84ed23d66800e0742b46eb3ac0b6a3d2, type: 3}
 --- !u!4 &625800789
 Transform:
@@ -186,6 +207,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+<<<<<<< HEAD
 --- !u!114 &625800790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -320,6 +342,8 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+=======
+>>>>>>> origin/lab
 --- !u!1 &1768563659
 GameObject:
   m_ObjectHideFlags: 0
@@ -425,8 +449,11 @@ GameObject:
   - component: {fileID: 1805002108}
   - component: {fileID: 1805002107}
   - component: {fileID: 1805002106}
+<<<<<<< HEAD
   - component: {fileID: 1805002110}
   - component: {fileID: 1805002109}
+=======
+>>>>>>> origin/lab
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -451,8 +478,13 @@ Camera:
   m_GameObject: {fileID: 1805002105}
   m_Enabled: 1
   serializedVersion: 2
+<<<<<<< HEAD
   m_ClearFlags: 2
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+=======
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+>>>>>>> origin/lab
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -502,12 +534,17 @@ Transform:
   m_GameObject: {fileID: 1805002105}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: -500}
+>>>>>>> origin/lab
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+<<<<<<< HEAD
 --- !u!124 &1805002109
 Behaviour:
   m_ObjectHideFlags: 0
@@ -529,6 +566,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 1
+=======
+>>>>>>> origin/lab
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -536,4 +575,7 @@ SceneRoots:
   - {fileID: 1805002108}
   - {fileID: 1768563661}
   - {fileID: 625800789}
+<<<<<<< HEAD
   - {fileID: 734024719}
+=======
+>>>>>>> origin/lab

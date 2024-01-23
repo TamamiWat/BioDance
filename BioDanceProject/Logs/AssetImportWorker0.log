@@ -11,6 +11,7 @@ C:\Program Files\Unity\Hub\Editor\2022.3.5f1\Editor\Unity.exe
 -name
 AssetImportWorker0
 -projectPath
+<<<<<<< HEAD
 C:/Users/Tamami Watanabe/Documents/UnityProj/20240123/BioDance/BioDanceProject
 -logFile
 Logs/AssetImportWorker0.log
@@ -18,6 +19,15 @@ Logs/AssetImportWorker0.log
 54375
 Successfully changed project path to: C:/Users/Tamami Watanabe/Documents/UnityProj/20240123/BioDance/BioDanceProject
 C:/Users/Tamami Watanabe/Documents/UnityProj/20240123/BioDance/BioDanceProject
+=======
+C:/Users/Tamami Watanabe/Documents/UnityProj/BioDance/BioDanceProject
+-logFile
+Logs/AssetImportWorker0.log
+-srvPort
+50520
+Successfully changed project path to: C:/Users/Tamami Watanabe/Documents/UnityProj/BioDance/BioDanceProject
+C:/Users/Tamami Watanabe/Documents/UnityProj/BioDance/BioDanceProject
+>>>>>>> origin/lab
 [UnityMemory] Configuration Parameters - Can be set up in boot.config
     "memorysetup-bucket-allocator-granularity=16"
     "memorysetup-bucket-allocator-bucket-count=8"
@@ -49,6 +59,7 @@ C:/Users/Tamami Watanabe/Documents/UnityProj/20240123/BioDance/BioDanceProject
     "memorysetup-temp-allocator-size-cloud-worker=32768"
     "memorysetup-temp-allocator-size-gi-baking-worker=262144"
     "memorysetup-temp-allocator-size-gfx=262144"
+<<<<<<< HEAD
 Player connection [11720] Host "[IP] 163.221.174.159 [Port] 0 [Flags] 2 [Guid] 592157360 [EditorId] 592157360 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-FRLRBUV) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined multi-casting on [225.0.0.222:54997]...
 
 Player connection [11720] Host "[IP] 163.221.174.159 [Port] 0 [Flags] 2 [Guid] 592157360 [EditorId] 592157360 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-FRLRBUV) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined alternative multi-casting on [225.0.0.222:34997]...
@@ -58,6 +69,17 @@ Preloading 0 native plugins for Editor in 0.00 ms.
 Initialize engine version: 2022.3.5f1 (9674261d40ee)
 [Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2022.3.5f1/Editor/Data/Resources/UnitySubsystems
 [Subsystems] Discovering subsystems at path C:/Users/Tamami Watanabe/Documents/UnityProj/20240123/BioDance/BioDanceProject/Assets
+=======
+Player connection [5892] Host "[IP] 163.221.174.159 [Port] 0 [Flags] 2 [Guid] 2051971763 [EditorId] 2051971763 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-FRLRBUV) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined multi-casting on [225.0.0.222:54997]...
+
+Player connection [5892] Host "[IP] 163.221.174.159 [Port] 0 [Flags] 2 [Guid] 2051971763 [EditorId] 2051971763 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-FRLRBUV) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined alternative multi-casting on [225.0.0.222:34997]...
+
+Refreshing native plugins compatible for Editor in 12.12 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2022.3.5f1 (9674261d40ee)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2022.3.5f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Users/Tamami Watanabe/Documents/UnityProj/BioDance/BioDanceProject/Assets
+>>>>>>> origin/lab
 GfxDevice: creating device client; threaded=0; jobified=0
 Direct3D:
     Version:  Direct3D 11.0 [level 11.1]
@@ -69,7 +91,11 @@ Initialize mono
 Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2022.3.5f1/Editor/Data/Managed'
 Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2022.3.5f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'C:/Program Files/Unity/Hub/Editor/2022.3.5f1/Editor/Data/MonoBleedingEdge/etc'
+<<<<<<< HEAD
 Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56320
+=======
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56884
+>>>>>>> origin/lab
 Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: C:/Program Files/Unity/Hub/Editor/2022.3.5f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
@@ -77,13 +103,19 @@ Register platform support module: C:/Program Files/Unity/Hub/Editor/2022.3.5f1/E
 Register platform support module: C:/Program Files/Unity/Hub/Editor/2022.3.5f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
 Register platform support module: C:/Program Files/Unity/Hub/Editor/2022.3.5f1/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.dll
 Register platform support module: C:/Program Files/Unity/Hub/Editor/2022.3.5f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+<<<<<<< HEAD
 Registered in 0.020733 seconds.
 - Loaded All Assemblies, in  0.404 seconds
+=======
+Registered in 0.028484 seconds.
+- Loaded All Assemblies, in  0.569 seconds
+>>>>>>> origin/lab
 Native extension for WindowsStandalone target not found
 [usbmuxd] Start listen thread
 [usbmuxd] Listen thread started
 Native extension for iOS target not found
 Native extension for Android target not found
+<<<<<<< HEAD
 Android Extension - Scanning For ADB Devices 293 ms
 Native extension for OSXStandalone target not found
 Native extension for WebGL target not found
@@ -91,11 +123,21 @@ Mono: successfully reloaded assembly
 - Finished resetting the current domain, in  0.653 seconds
 Domain Reload Profiling: 1054ms
 	BeginReloadAssembly (97ms)
+=======
+Android Extension - Scanning For ADB Devices 403 ms
+Native extension for OSXStandalone target not found
+Native extension for WebGL target not found
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  0.927 seconds
+Domain Reload Profiling: 1492ms
+	BeginReloadAssembly (136ms)
+>>>>>>> origin/lab
 		ExecutionOrderSort (0ms)
 		DisableScriptedObjects (0ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
 		CreateAndSetChildDomain (1ms)
+<<<<<<< HEAD
 	RebuildCommonClasses (37ms)
 	RebuildNativeTypeToScriptingClass (13ms)
 	initialDomainReloadingComplete (81ms)
@@ -118,6 +160,30 @@ Domain Reload Profiling: 1054ms
 			BeforeProcessingInitializeOnLoad (2ms)
 			ProcessInitializeOnLoadAttributes (105ms)
 			ProcessInitializeOnLoadMethodAttributes (49ms)
+=======
+	RebuildCommonClasses (50ms)
+	RebuildNativeTypeToScriptingClass (17ms)
+	initialDomainReloadingComplete (118ms)
+	LoadAllAssembliesAndSetupDomain (244ms)
+		LoadAssemblies (134ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (230ms)
+			TypeCache.Refresh (228ms)
+				TypeCache.ScanAssembly (211ms)
+			ScanForSourceGeneratedMonoScriptInfo (1ms)
+			ResolveRequiredComponents (1ms)
+	FinalizeReload (927ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (835ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (602ms)
+			SetLoadedEditorAssemblies (5ms)
+			RefreshPlugins (0ms)
+			BeforeProcessingInitializeOnLoad (3ms)
+			ProcessInitializeOnLoadAttributes (150ms)
+			ProcessInitializeOnLoadMethodAttributes (74ms)
+>>>>>>> origin/lab
 			AfterProcessingInitializeOnLoad (0ms)
 			EditorAssembliesLoaded (0ms)
 		ExecutionOrderSort2 (0ms)
@@ -125,16 +191,24 @@ Domain Reload Profiling: 1054ms
 ========================================================================
 Worker process is ready to serve import requests
 Begin MonoManager ReloadAssembly
+<<<<<<< HEAD
 Symbol file LoadedFromMemory doesn't match image C:\Users\Tamami Watanabe\Documents\UnityProj\20240123\BioDance\BioDanceProject\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
 Symbol file LoadedFromMemory doesn't match image C:\Users\Tamami Watanabe\Documents\UnityProj\20240123\BioDance\BioDanceProject\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
 - Loaded All Assemblies, in  0.781 seconds
 Refreshing native plugins compatible for Editor in 3.63 ms, found 3 plugins.
+=======
+Symbol file LoadedFromMemory doesn't match image C:\Users\Tamami Watanabe\Documents\UnityProj\BioDance\BioDanceProject\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\Tamami Watanabe\Documents\UnityProj\BioDance\BioDanceProject\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+- Loaded All Assemblies, in  1.407 seconds
+Refreshing native plugins compatible for Editor in 5.72 ms, found 3 plugins.
+>>>>>>> origin/lab
 Native extension for WindowsStandalone target not found
 Native extension for iOS target not found
 Native extension for Android target not found
 Native extension for OSXStandalone target not found
 Native extension for WebGL target not found
 Mono: successfully reloaded assembly
+<<<<<<< HEAD
 - Finished resetting the current domain, in  0.525 seconds
 Domain Reload Profiling: 1301ms
 	BeginReloadAssembly (132ms)
@@ -2315,6 +2389,85 @@ Unloading 3242 Unused Serialized files (Serialized files now loaded: 0)
 Unloading 24 unused Assets / (137.8 KB). Loaded Objects now: 3813.
 Memory consumption went from 125.2 MB to 125.0 MB.
 Total: 4.101900 ms (FindLiveObjects: 0.329200 ms CreateObjectMapping: 0.307900 ms MarkObjects: 3.390900 ms  DeleteObjects: 0.072900 ms)
+=======
+- Finished resetting the current domain, in  0.908 seconds
+Domain Reload Profiling: 2308ms
+	BeginReloadAssembly (233ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (10ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (37ms)
+	RebuildCommonClasses (64ms)
+	RebuildNativeTypeToScriptingClass (21ms)
+	initialDomainReloadingComplete (83ms)
+	LoadAllAssembliesAndSetupDomain (998ms)
+		LoadAssemblies (524ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (583ms)
+			TypeCache.Refresh (549ms)
+				TypeCache.ScanAssembly (521ms)
+			ScanForSourceGeneratedMonoScriptInfo (27ms)
+			ResolveRequiredComponents (7ms)
+	FinalizeReload (909ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (652ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (78ms)
+			SetLoadedEditorAssemblies (6ms)
+			RefreshPlugins (0ms)
+			BeforeProcessingInitializeOnLoad (116ms)
+			ProcessInitializeOnLoadAttributes (399ms)
+			ProcessInitializeOnLoadMethodAttributes (34ms)
+			AfterProcessingInitializeOnLoad (18ms)
+			EditorAssembliesLoaded (0ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (12ms)
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.07 seconds
+Refreshing native plugins compatible for Editor in 6.86 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3250 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 33 unused Assets / (166.1 KB). Loaded Objects now: 3717.
+Memory consumption went from 127.7 MB to 127.6 MB.
+Total: 4.940100 ms (FindLiveObjects: 0.343200 ms CreateObjectMapping: 0.304900 ms MarkObjects: 4.105900 ms  DeleteObjects: 0.184600 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:AudioImporter_EditorPlatform: d09bf68614088b80899f8185d706f6e7 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 658443.644370 seconds.
+  path: Assets/Scripts
+  artifactKey: Guid(a46f991ccbf53ad4eae7b232fa7b97e1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts using Guid(a46f991ccbf53ad4eae7b232fa7b97e1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '95e5b3bb1e6e3743e328c462ad56546f') in 0.003738 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 0
+========================================================================
+Received Import Request.
+  Time since last request: 0.000033 seconds.
+  path: Assets/Scripts/Boids.cs
+  artifactKey: Guid(ef501c2173f4563449cca449ea98bac5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/Boids.cs using Guid(ef501c2173f4563449cca449ea98bac5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'f27322ab0e63f6a7e0b15cc5bbfe3604') in 0.000655 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 0
+========================================================================
+Received Prepare
+Refreshing native plugins compatible for Editor in 5.94 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 3 unused Assets / (112.4 KB). Loaded Objects now: 3717.
+Memory consumption went from 74.7 MB to 74.6 MB.
+Total: 4.113100 ms (FindLiveObjects: 0.331400 ms CreateObjectMapping: 0.288400 ms MarkObjects: 3.441200 ms  DeleteObjects: 0.050800 ms)
+>>>>>>> origin/lab
 
 Prepare: number of updated asset objects reloaded= 0
 AssetImportParameters requested are different than current active one (requested -> active):
@@ -2329,3 +2482,30 @@ AssetImportParameters requested are different than current active one (requested
   custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
   custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
   custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+<<<<<<< HEAD
+=======
+========================================================================
+Received Import Request.
+  Time since last request: 38.346472 seconds.
+  path: Assets/Shader
+  artifactKey: Guid(77d3b79c863576c4eb3227d740a077b7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Shader using Guid(77d3b79c863576c4eb3227d740a077b7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '12c30514f8ce052b263cfcdacb6b74bd') in 0.014092 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 0
+========================================================================
+Received Import Request.
+  Time since last request: 0.948993 seconds.
+  path: Assets/Shader/CalcParticlePos.compute
+  artifactKey: Guid(7bcabf0769c694a409e5c82a7dcfe542) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Shader/CalcParticlePos.compute using Guid(7bcabf0769c694a409e5c82a7dcfe542) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '840db37962dc94de06af6fd7040fd3a7') in 0.300665 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 1
+========================================================================
+Received Import Request.
+  Time since last request: 0.012272 seconds.
+  path: Assets/Shader/Boids.compute
+  artifactKey: Guid(84ed23d66800e0742b46eb3ac0b6a3d2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Shader/Boids.compute using Guid(84ed23d66800e0742b46eb3ac0b6a3d2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '2b34b447693eeb161fb1c16aa41448fe') in 0.003854 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 1
+>>>>>>> origin/lab

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+<<<<<<< HEAD
 namespace BoidsSimulation
 {
     // 同GameObjectに、GPUBoidsコンポーネントがアタッチされていること保証
@@ -97,3 +98,19 @@ namespace BoidsSimulation
         #endregion
     }
 }
+=======
+public class BoidsRender : MonoBehaviour
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+}
+>>>>>>> origin/lab

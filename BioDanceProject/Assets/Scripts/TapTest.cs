@@ -10,6 +10,7 @@ public class TapTest : MonoBehaviour
     void Update()
     {
         mousePosition = Input.mousePosition;
+<<<<<<< HEAD
 
         Debug.Log("Screen position : " + mousePosition);
         mousePosition.z = 100f;
@@ -23,5 +24,11 @@ public class TapTest : MonoBehaviour
         {
             Debug.Log(mousePosition);
         }*/
+=======
+        if(Input.GetMouseButtonUp(0))
+        {
+            Debug.Log(mousePosition);
+        }
+>>>>>>> origin/lab
     }
 }

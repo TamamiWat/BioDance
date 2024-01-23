@@ -1,24 +1,23 @@
-// カーネル関数を指定
-#pragma kernel SteerForceCalculator      //Steer Force
-#pragma kernel MotionCalculator  //Velocity, Position
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel SteerForceCalculator //Steer Force
+#pragma kernel MotionCalculator //Velocity, Position
 #define SIMULATION_BLOCK_SIZE 256 //Size of thread group's thread
-
 
 struct BoidData
 {
-	float3 velocity;
-	float3 position;
+    float3 velocity;
+    float3 position;
 };
 
 /*
 **Buffer Definition
 */
 //Boids Data Buffer
-StructuredBuffer<BoidData>   _BoidDataBufferRead;
-RWStructuredBuffer<BoidData> _BoidDataBufferWrite;
+StructuredBuffer<BoidsData> _BoidsDataBufferRead;
+RWStructuredBuffer<BoidsData> _BoidsDataBufferReadWrite;
 //Boids Steer Force Buffer
-StructuredBuffer<float3>     _BoidForceBufferRead;
-RWStructuredBuffer<float3>   _BoidForceBufferWrite;
+StructuredBuffer<float3> _BoidsForceBufferRead;
+RWStructuredBuffer<float3> _BoidsForceBufferReadWrite;
 
 /**
 ***From CPU
@@ -41,6 +40,8 @@ float _SeparationWeight;  //Cohesion
 float _AlignmentWeight; //Alignment
 float _CohesionWeight;  //Separate
 float  _AvoidFrameWeight; //Weight for avoiding frame
+
+float m_AvoidFrameWeight; //Weight for avoiding frame
 
 //Angle with other object
 float _CohesionAngle; //Cohesion
@@ -103,7 +104,7 @@ float3 limitBoundry(float3 pos)
 		{
 			repulsion.z = (pos.z > 0) ? -strength : strength;
 		}
-        
+
         return repulsion;
     }
 
@@ -129,15 +130,17 @@ float RadianToDegree(float rad)
 //shared memory
 groupshared BoidData boid_data[SIMULATION_BLOCK_SIZE];
 
+//kernel
+
 /*
 **SteerForceCalculator
 */
 [numthreads(SIMULATION_BLOCK_SIZE, 1, 1)]
 void SteerForceCalculator
-(
-	uint3 id : SV_DispatchThreadID, //Unique ID for the entire thread
-	uint3 Gid : SV_GroupID,           
-	uint3 GTid : SV_GroupThreadID,    
+ (
+    uint3 id : SV_DispatchThreadID, //Unique ID for the entire thread
+    uint3 Gid : SV_GroupID,
+    uint3 GTid : SV_GroupThreadID,
 	uint  GIndex : SV_GroupIndex      //GroupThreadID in one dimension
 )
 {
@@ -146,7 +149,7 @@ void SteerForceCalculator
 	float3 self_Velocity = _BoidDataBufferRead[P_ID].velocity; //velocity of myself
 
 	float3 force = float3(0, 0, 0); //init steer force
-	
+
     //counts
     int sepCount = 0; //separation
     int aliCount = 0; //alignment
@@ -161,26 +164,27 @@ void SteerForceCalculator
 	[loop]
 	for (uint N_block_ID = 0; N_block_ID < (uint)_MaxBoidObjectNum;
 									N_block_ID += SIMULATION_BLOCK_SIZE)
-	{
-		//Storage Boids data in shared memory (Size : SIMULATION_BLOCK_SIZE) 
+    {
+        //Storage Boids data in shared memory (Size : SIMULATION_BLOCK_SIZE) 
 		boid_data[GIndex] = _BoidDataBufferRead[N_block_ID + GIndex];
-
+        
         //Block execution all threds in a group 
         //until all threads in a group reach this call 
         //after sompleting all group shared access
         GroupMemoryBarrierWithGroupSync();
 
-		//calculation with other objects
+        //calculation with other objects
 		for (int N_other_ID = 0; N_other_ID < SIMULATION_BLOCK_SIZE; N_other_ID++)
-		{
+        {
             float3 other_position = boid_data[N_other_ID].position; //other object position
             float3 other_velocity = boid_data[N_other_ID].velocity; //other object velocity
 
+            //distance and angle with other object
             float3 diff = self_Position - other_position;
             float distance = length(diff);
             float angle = acos(dot(normalize(self_Velocity), normalize(diff)));
 
-			//Separation
+            //Separation
             if (distance > 0.0 && distance < _SeparateNeighborhoodRadius && angle < _SeparationAngle)
             {
                 float3 direction = self_Position - other_position;
@@ -189,44 +193,44 @@ void SteerForceCalculator
                 sepCount++;
             }
 
-			//Alignment
+            //Alignment
             if (distance > 0.0 && distance < _AlignmentNeighborhoodRadius && angle < _AlignmentAngle)
             {
                 aliVelSum += other_velocity;
                 aliCount++;
             }
 
-			//Cohesion
+            //Cohesion
             if (distance > 0.0 && distance < _CohesionNeighborhoodRadius && angle < _CohesionAngle)
             {
                 cohPosSum += other_position;
                 cohCount++;
-            }	
+            }
 
-		}
-		GroupMemoryBarrierWithGroupSync();
-	}
-
+        }
+        GroupMemoryBarrierWithGroupSync();
+    }
+    
 	//Separation
-	float3 sepForce = (float3)0.0;
+    float3 sepForce = (float3)0.0;
 	if (sepCount > 0)
-	{
+    {
 		sepForce = sepDirSum;
         sepForce = calcForce(sepForce, _CohesionWeight, self_Velocity);
     }
-	
+
 
 	//Alignment
-	float3 aliForce = (float3)0.0;
+    float3 aliForce = (float3)0.0;
 	if (aliCount > 0)
-	{
+    {
 		aliForce = aliVelSum / (float)aliCount;     // Find the average of the speeds of the nearest individuals.
         aliForce = calcForce(aliForce, _AlignmentWeight, self_Velocity);
     }
-	
+
 
 	//Cohesion
-	float3 cohForce = (float3)0.0;
+    float3 cohForce = (float3)0.0;
 	if (cohCount > 0)
 	{
 		cohForce = cohPosSum / (float)cohCount;    // Find the average of the positions of the nearest individuals.
@@ -271,14 +275,14 @@ void SteerForceCalculator
                 
             }
             else
-            {
+    {
                 
             }
 
         }
         
     }
-	
+        
 
     force = sepForce + aliForce + cohForce + attForce + avoForce;
 
@@ -291,20 +295,20 @@ void SteerForceCalculator
 [numthreads(SIMULATION_BLOCK_SIZE, 1, 1)]
 void MotionCalculator
 (
-	uint3 id : SV_DispatchThreadID 
+    uint3 id : SV_DispatchThreadID
 )
 {
 	const unsigned int P_ID = id.x;          //get index
-											           
+
 	BoidData currentData = _BoidDataBufferWrite[P_ID];   //read current Boids Data
 	float3 force = _BoidForceBufferRead[P_ID]; //read steer force
-	
+    
 	force += limitBoundry(currentData.position) * _AvoidFrameWeight;
 
 	currentData.velocity += force * _DeltaTime;          //apply steer force to velocity
 	currentData.velocity = limitVelocity(currentData.velocity, _MaxSpeed, _MinSpeed); 
-		//limit velocity
+        //limit velocity
 	currentData.position += currentData.velocity * _DeltaTime;     //update position
-											           
+
 	_BoidDataBufferWrite[P_ID] = currentData;           //update Boids data
 }
