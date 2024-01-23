@@ -174,6 +174,11 @@ namespace BoidsSimulation
             boidCS.SetFloat("_FrameRadius", m_FrameRadius);
             if(Input.GetMouseButtonDown(0))
             {
+                m_tapPos = Input.mousePosition;
+                //m_tapPos.z = m_FrameRadius / 2;
+                m_tapPos.z = 6.0f;
+                m_tapPos = Camera.main.ScreenToWorldPoint(m_tapPos);
+                Debug.Log(m_tapPos);
                 boidCS.SetVector("_TapPos", m_tapPos);
             }
             
