@@ -110,6 +110,22 @@ float3 limitBoundry(float3 pos)
     return repulsion;
 }
 
+float3 calcForce(float3 inForce, float weight, float3 selfVelocity)
+{
+    float3 outForce = normalize(inForce) * _MaxSpeed;
+    outForce = outForce - selfVelocity;
+    outForce = limit(outForce, _MaxSteerForce);
+    outForce *= weight;
+    return outForce;
+	
+}
+
+float RadianToDegree(float rad)
+{
+    float degree = rad * 180 / 3.14;
+    return degree;
+}
+
 //shared memory
 groupshared BoidData boid_data[SIMULATION_BLOCK_SIZE];
 
@@ -125,7 +141,7 @@ void SteerForceCalculator
 	uint  GIndex : SV_GroupIndex      //GroupThreadID in one dimension
 )
 {
-	const unsigned int P_ID = id.x; 
+	const unsigned int P_ID = id.x; //self ID
 	float3 self_Position = _BoidDataBufferRead[P_ID].position; //position of myself
 	float3 self_Velocity = _BoidDataBufferRead[P_ID].velocity; //velocity of myself
 
@@ -157,37 +173,36 @@ void SteerForceCalculator
 		//calculation with other objects
 		for (int N_other_ID = 0; N_other_ID < SIMULATION_BLOCK_SIZE; N_other_ID++)
 		{
-			if ((unsigned int)N_other_ID == P_ID) continue;
+            float3 other_position = boid_data[N_other_ID].position; //other object position
+            float3 other_velocity = boid_data[N_other_ID].velocity; //other object velocity
 
-			float3 other_position = boid_data[N_other_ID].position; //other object position
-			float3 other_velocity = boid_data[N_other_ID].velocity; //other object velocity
-
-			float3 diff = self_Position - other_position;
-			float distance = length(diff);
-			float angle = acos(dot(normalize(self_Velocity), normalize(diff)));
+            float3 diff = self_Position - other_position;
+            float distance = length(diff);
+            float angle = acos(dot(normalize(self_Velocity), normalize(diff)));
 
 			//Separation
-			if (distance > 0.0 && distance < _SeparateNeighborhoodRadius && angle < _SeparationAngle)
-			{
-				float3 direction = self_Position - other_position;
-				direction /= distance; //Reduce the impact of distant objects
-				sepDirSum += direction; 
-				sepCount++;    
-			}
+            if (distance > 0.0 && distance < _SeparateNeighborhoodRadius && angle < _SeparationAngle)
+            {
+                float3 direction = self_Position - other_position;
+                direction /= distance; //Reduce the impact of distant objects
+                sepDirSum += direction;
+                sepCount++;
+            }
 
 			//Alignment
-			if (distance > 0.0 && distance < _AlignmentNeighborhoodRadius && angle < _AlignmentAngle)
-			{
-				aliVelSum += other_velocity; 
-				aliCount++;            
-			}
+            if (distance > 0.0 && distance < _AlignmentNeighborhoodRadius && angle < _AlignmentAngle)
+            {
+                aliVelSum += other_velocity;
+                aliCount++;
+            }
 
 			//Cohesion
-			if (distance > 0.0 && distance< _CohesionNeighborhoodRadius  && angle < _CohesionAngle)
-			{
-				cohPosSum += other_position; 
-				cohCount++;             
-			}
+            if (distance > 0.0 && distance < _CohesionNeighborhoodRadius && angle < _CohesionAngle)
+            {
+                cohPosSum += other_position;
+                cohCount++;
+            }	
+
 		}
 		GroupMemoryBarrierWithGroupSync();
 	}
@@ -197,11 +212,8 @@ void SteerForceCalculator
 	if (sepCount > 0)
 	{
 		sepForce = sepDirSum;
-		sepForce = normalize(sepForce) * _MaxSpeed; 
-		sepForce = sepForce - self_Velocity;           
-		sepForce = limit(sepForce, _MaxSteerForce);
-		sepForce *= _SeparationWeight;
-	}
+        sepForce = calcForce(sepForce, _CohesionWeight, self_Velocity);
+    }
 	
 
 	//Alignment
@@ -209,11 +221,8 @@ void SteerForceCalculator
 	if (aliCount > 0)
 	{
 		aliForce = aliVelSum / (float)aliCount;     // Find the average of the speeds of the nearest individuals.
-		aliForce = normalize(aliForce) * _MaxSpeed; 
-		aliForce = aliForce - self_Velocity;           
-		aliForce = limit(aliForce, _MaxSteerForce); 
-		aliForce *= _AlignmentWeight;
-	}
+        aliForce = calcForce(aliForce, _AlignmentWeight, self_Velocity);
+    }
 	
 
 	//Cohesion
@@ -221,14 +230,57 @@ void SteerForceCalculator
 	if (cohCount > 0)
 	{
 		cohForce = cohPosSum / (float)cohCount;    // Find the average of the positions of the nearest individuals.
-		cohForce = normalize(cohForce) * _MaxSpeed;
-		cohForce = cohForce - self_Velocity;         
-		cohForce = limit(cohForce, _MaxSteerForce); 
-		cohForce *= _CohesionWeight;		
-	}
+        cohForce = calcForce(cohForce, _CohesionWeight, self_Velocity);
+    }
+	
+	//attractive force
+    float3 attForce = (float3) 0.0;
+	/*if(_TapPos.z != 0.0)
+    {
+        float distance = length(self_Position - _TapPos);
+        float3 direction = normalize(_TapPos - self_Position);
+        float yaw = atan2(direction.z, direction.x);
+        float length_xy = sqrt(direction.x * direction.x + direction.y * direction.y);
+        float pitch = atan2(direction.z, length_xy);
+		
+        float limitRad = 0.78;
+        float forceWeight = 5.0;
+        if (distance < 100.0 && abs(yaw) < limitRad && abs(pitch) < limitRad)
+        {
+            attForce = direction;
+			
+            //attForce *= forceWeight;
+            attForce = calcForce(attForce, forceWeight, self_Velocity);
+
+        }				
+    }*/
+    
+    //avoid Force
+    float3 avoForce = (float3) 0.0;
+    if(_TapPos.z != 0.0)
+    {
+        float distance = length(self_Position - _TapPos);
+        float3 direction = normalize(_TapPos - self_Position);
+        float avoidRange = 20.0;
+        float escapeRange = avoidRange / 2;
+        
+        if (distance < avoidRange)
+        {
+            if (distance < escapeRange)
+            {
+                
+            }
+            else
+            {
+                
+            }
+
+        }
+        
+    }
 	
 
-	force = sepForce + aliForce + cohForce;
+    force = sepForce + aliForce + cohForce + attForce + avoForce;
 
 	_BoidForceBufferWrite[P_ID] = force; //update steer force
 }
