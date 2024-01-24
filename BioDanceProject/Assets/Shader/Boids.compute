@@ -1,4 +1,4 @@
-// カーネル関数を指定
+// �J�[�l���֐���w��
 #pragma kernel SteerForceCalculator      //Steer Force
 #pragma kernel MotionCalculator  //Velocity, Position
 #define SIMULATION_BLOCK_SIZE 256 //Size of thread group's thread
@@ -52,6 +52,13 @@ float4 _FrameSize;        //frame size
 
 float _FrameRadius; //Sphere Frame Radius
 
+float _AttractAngleRange;
+float _AttractRange;
+float _AttractForceWeight;
+float _AvoidRange;
+float _EscapeRange;
+
+
 //User Position
 float3 _TapPos;
 float3 _DragPos;
@@ -59,6 +66,14 @@ float3 _DragPos;
 /**
 ***Functions
 **/
+
+inline float RadianToDegree(float rad)
+{
+    float degree = rad * 180 / 3.14;
+    return degree;
+}
+
+
 //limit vector size
 float3 limit(float3 vec, float max)
 {
@@ -104,11 +119,12 @@ float3 limitBoundry(float3 pos)
 			repulsion.z = (pos.z > 0) ? -strength : strength;
 		}
         
-        return repulsion;
+        //return repulsion;
     }
 
     return repulsion;
 }
+
 
 float3 calcForce(float3 inForce, float weight, float3 selfVelocity)
 {
@@ -120,10 +136,12 @@ float3 calcForce(float3 inForce, float weight, float3 selfVelocity)
 	
 }
 
-float RadianToDegree(float rad)
+float3 calcCoulombForce(float3 direction, float weight, float distance, float3 selfVelocity)
 {
-    float degree = rad * 180 / 3.14;
-    return degree;
+    float3 outForce = weight * direction / (distance * distance + 0.00001);
+    outForce = limit(outForce, _MaxSteerForce);
+    outForce *= weight;
+    return outForce;
 }
 
 //shared memory
@@ -232,55 +250,35 @@ void SteerForceCalculator
 		cohForce = cohPosSum / (float)cohCount;    // Find the average of the positions of the nearest individuals.
         cohForce = calcForce(cohForce, _CohesionWeight, self_Velocity);
     }
+    
+    
+    //Avoidance
+    float3 avoForce = (float3) 0.0;
 	
-	//attractive force
-    float3 attForce = (float3) 0.0;
-	/*if(_TapPos.z != 0.0)
+	//Attraction
+    float3 attForce = (float3) 0.0;   
+    if (_TapPos.z != 0.0)
     {
-        float distance = length(self_Position - _TapPos);
+        float distance = length(_TapPos - self_Position);
         float3 direction = normalize(_TapPos - self_Position);
         float yaw = atan2(direction.z, direction.x);
         float length_xy = sqrt(direction.x * direction.x + direction.y * direction.y);
         float pitch = atan2(direction.z, length_xy);
-		
+        
         float limitRad = 0.78;
-        float forceWeight = 5.0;
+        float forceWeight = 10.0;
         if (distance < 100.0 && abs(yaw) < limitRad && abs(pitch) < limitRad)
         {
             attForce = direction;
 			
             //attForce *= forceWeight;
-            attForce = calcForce(attForce, forceWeight, self_Velocity);
-
-        }				
-    }*/
-    
-    //avoid Force
-    float3 avoForce = (float3) 0.0;
-    if(_TapPos.z != 0.0)
-    {
-        float distance = length(self_Position - _TapPos);
-        float3 direction = normalize(_TapPos - self_Position);
-        float avoidRange = 20.0;
-        float escapeRange = avoidRange / 2;
-        
-        if (distance < avoidRange)
-        {
-            if (distance < escapeRange)
-            {
-                
-            }
-            else
-            {
-                
-            }
+            attForce = calcCoulombForce(direction, forceWeight, distance, self_Velocity);
 
         }
-        
     }
-	
+    
 
-    force = sepForce + aliForce + cohForce + attForce + avoForce;
+    force = sepForce + aliForce + cohForce + avoForce + attForce;
 
 	_BoidForceBufferWrite[P_ID] = force; //update steer force
 }
@@ -302,6 +300,7 @@ void MotionCalculator
 	force += limitBoundry(currentData.position) * _AvoidFrameWeight;
 
 	currentData.velocity += force * _DeltaTime;          //apply steer force to velocity
+
 	currentData.velocity = limitVelocity(currentData.velocity, _MaxSpeed, _MinSpeed); 
 		//limit velocity
 	currentData.position += currentData.velocity * _DeltaTime;     //update position
