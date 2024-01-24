@@ -1,4 +1,4 @@
-// カーネル関数を指定
+// �J�[�l���֐���w��
 #pragma kernel SteerForceCalculator      //Steer Force
 #pragma kernel MotionCalculator  //Velocity, Position
 #define SIMULATION_BLOCK_SIZE 256 //Size of thread group's thread

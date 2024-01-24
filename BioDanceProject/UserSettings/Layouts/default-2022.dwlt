@@ -121,6 +121,7 @@ MonoBehaviour:
     x: 0
     y: 0
     width: 1920
+>>>>>>> origin/lab
     height: 30
   m_MinSize: {x: 0, y: 0}
   m_MaxSize: {x: 0, y: 0}
@@ -901,6 +902,7 @@ MonoBehaviour:
   - Assets
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\Tamami Watanabe\Documents\UnityProj\20240124\BioDance\BioDanceProject
+>>>>>>> origin/lab
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
@@ -936,6 +938,7 @@ MonoBehaviour:
     m_SelectedIDs: 
     m_LastClickedID: 0
     m_ExpandedIDs: 
+>>>>>>> origin/lab
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
