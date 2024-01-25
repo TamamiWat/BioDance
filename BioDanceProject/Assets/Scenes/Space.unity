@@ -385,7 +385,7 @@ MonoBehaviour:
   m_SeparationAngle: 1.5
   m_FrameCenter: {x: 0, y: 0, z: 0}
   m_FrameSize: {x: 32, y: 32, z: 32}
-  m_FrameRadius: 20.4
+  m_FrameRadius: 15.8
   BoidsCS: {fileID: 7200000, guid: 84ed23d66800e0742b46eb3ac0b6a3d2, type: 3}
 --- !u!4 &2000106475
 Transform:
