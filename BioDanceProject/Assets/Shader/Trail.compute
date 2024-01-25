@@ -1,0 +1,46 @@
+#pragma kernel CalcInput
+
+//struct
+struct Input
+{
+    float3 position;
+};
+
+struct Trail
+{
+    int cuurenctNodeIndex;
+};
+
+struct Node
+{
+    float time;
+    float3 position;
+};
+
+//variable
+uint _NodeNumPerTrail;
+
+//function
+int Trail2NodeIndex(int trailIndex, int nodeIndex)
+{
+    nodeIndex %= _NodeNumPerTrail;
+    return trailIndex * _NodeNumPerTrail + nodeIndex;
+}
+
+bool IsValid(Node node)
+{
+    return node.time >= 0;
+}
+
+
+//Buffer
+RWStructuredBuffer<Trail> _TrailBuffer;
+RWStructuredBuffer<Node> _NodeBuffer;
+RWStructuredBuffer<Input> _InputBuffer;
+
+
+[numthreads(256,1,1)]
+void CalcInput(uint3 id : SV_DispatchThreadID)
+{
+    uint trailIndex = id.x;
+}

@@ -13,6 +13,7 @@ namespace TrailDrawing
         #region define Parameters
         public int m_trailNum;
         public int m_nodeNum;
+        public Mesh m_mesh;
         
 
         #endregion
@@ -40,6 +41,12 @@ namespace TrailDrawing
         public ComputeBuffer trailBuffer;
         public ComputeBuffer nodeBuffer;
         public ComputeBuffer inputBuffer;
+        #endregion
+
+        #region private variable
+        private Vector3 mousePosition = Vector3.zero;
+        private bool isDrag = false;
+
         #endregion
 
         #region Monobehaviour functions
@@ -96,12 +103,15 @@ namespace TrailDrawing
             //init All Buffers
             var firstTrail = new Trail(){currentNodeIndex = -1};
             var firstNode = new Node(){time = -1};
+            //var firstInput = new Input() { pos = (float3)0.0 };
 
             var trailArr = Enumerable.Repeat(firstTrail, m_trailNum).ToArray();
             var nodeArr = Enumerable.Repeat(firstNode, allNodeNum).ToArray();
+            //var inputArr = Enumerable.Repeat(firstInput, m_trailNum).ToArray();
 
             trailBuffer.SetData(trailArr);
             nodeBuffer.SetData(nodeArr);
+            //inputBuffer.SetData(inputArr);
         }
         #endregion
 
