@@ -233,7 +233,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &428010782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -384,7 +384,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2000106473
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -399,8 +399,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ObjectScale: {x: 0.1, y: 0.2, z: 0.5}
   BoidsCS: {fileID: 2000106474}
-  InstanceMesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
-  InstanceRenderMaterial: {fileID: 2100000, guid: cc71b18a21704d545a1415ca0776cb1d, type: 2}
+  InstanceMesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  InstanceRenderMaterial: {fileID: 2100000, guid: 081e9e2662a088b44913c5f5a03f3b06, type: 2}
 --- !u!114 &2000106474
 MonoBehaviour:
   m_ObjectHideFlags: 0
