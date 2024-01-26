@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Assertions;
-using Unity.Mathematics;
 
 namespace TrailDrawing
 {
@@ -22,7 +21,7 @@ namespace TrailDrawing
         private ComputeBuffer _PostCalc;
         private MaterialPropertyBlock m_ptoperties;
         private int kernelID;
-        private vector3 m_DragPos;
+        private Vector3 m_DragPos;
 
 
         #endregion
@@ -30,12 +29,12 @@ namespace TrailDrawing
         #region struct define
         public struct InputSource
         {
-            public float3 position;
+            public Vector3 position;
         }
 
         public struct OutputSource
         {
-            public float3 position;
+            public Vector3 position;
         } 
         #endregion
         
@@ -50,27 +49,27 @@ namespace TrailDrawing
         }
 
         // Update is called once per frame
-        void Update()
+        void LateUpdate()
         {
             
         }
 
         void OnDisable()
         {
-            PreCalc.Release();
-            PreCalc = null;
-            PostCalc.Release();
-            PostCalc = null;
-            Destroy(Material);
-            Material = null;
+            _PreCalc.Release();
+            _PreCalc = null;
+            _PostCalc.Release();
+            _PostCalc = null;
+            Destroy(m_renderMat);
+            m_renderMat = null;
         }
         #endregion
 
         #region self-define funcitons
         void initBuffer()
         {
-            _PreCalc = new ComputeBuffer(1, Marshal.SizeOf(InputSource));
-            _PostCalc = new ComputeBuffer(3, Marshal.SizeOf(InputSource));
+            _PreCalc = new ComputeBuffer(1, Marshal.SizeOf(typeof(InputSource)));
+            _PostCalc = new ComputeBuffer(3, Marshal.SizeOf(typeof(OutputSource)));
 
             kernelID = cs.FindKernel("CalcVert");
             cs.SetBuffer(kernelID, "_InputSource", _PreCalc);
