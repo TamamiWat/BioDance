@@ -7,6 +7,18 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class LineRender : MonoBehaviour
 {
+    #region struct
+    public struct User
+    {
+        public Vector3 position;
+    }
+
+    public struct OutputInfo
+    {
+        public Vector3 position;
+    }
+    #endregion
+
     #region set inspector
     [Range(2, 50)] public int vertexNum = 4;
     public Material material;
@@ -16,13 +28,7 @@ public class LineRender : MonoBehaviour
     Vector3 mousePosition = Vector3.zero;
     bool isDrag = false;
     ComputeBuffer _inputBuffer;
-    #endregion
-
-    #region struct
-    public struct User
-    {
-        public Vector3 position;
-    }
+    List<User> userPositions = new List<User>();
     #endregion
 
     #region Monobehaviour function
@@ -31,14 +37,6 @@ public class LineRender : MonoBehaviour
         initBuffer();
     }
 
-    private void Update()
-    {
-        if(Input.GetMouseButtonUp(0))
-        {
-            _inputBuffer = null;
-            initBuffer();
-        }
-    }
 
     private void OnDestroy()
     {
@@ -72,7 +70,7 @@ public class LineRender : MonoBehaviour
 
     void initBuffer()
     {
-        _inputBuffer = new ComputeBuffer(1, Marshal.SizeOf(typeof(User)));
+        _inputBuffer = new ComputeBuffer(1024, Marshal.SizeOf(typeof(User)));
     }
 
     #endregion
