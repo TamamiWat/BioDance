@@ -4,53 +4,46 @@ using UnityEngine;
 
 namespace BoidsSimulation
 {
-    // 同GameObjectに、GPUBoidsコンポーネントがアタッチされていること保証
     [RequireComponent(typeof(Boids))]
     public class BoidsRender : MonoBehaviour
     {
         #region Paremeters
-        // 描画するBoidsオブジェクトのスケール
         public Vector3 ObjectScale = new Vector3(0.1f, 0.2f, 0.5f);
         #endregion
 
         #region Script References
-        // GPUBoidsスクリプトの参照
         public Boids BoidsCS;
         #endregion
 
         #region Built-in Resources
-        // 描画するメッシュの参照
-        public Mesh InstanceMesh;
-        // 描画のためのマテリアルの参照
-        public Material InstanceRenderMaterial;
+        public Mesh _mesh;
+        public Material _material;
         #endregion
 
         #region Private Variables
-        // GPUインスタンシングのための引数（ComputeBufferへの転送用）
-        // インスタンスあたりのインデックス数, インスタンス数, 
-        // 開始インデックス位置, ベース頂点位置, インスタンスの開始位置
+        // Arguments for GPU instancing (for transfer to ComputeBuffer).
+        // number of indexes per instance, number of instances,. 
+        // Start index position, base vertex position, start position of instance
         uint[] args = new uint[5] { 0, 0, 0, 0, 0 };
-        // GPUインスタンシングのための引数バッファ
-        ComputeBuffer argsBuffer;
+        GraphicsBuffer argsBuffer;
+        MaterialPropertyBlock props;
         #endregion
 
         #region MonoBehaviour Functions
         void Start()
         {
-            // 引数バッファを初期化
-            argsBuffer = new ComputeBuffer(1, args.Length * sizeof(uint),
-                ComputeBufferType.IndirectArguments);
+            props = new MaterialPropertyBlock();
+            props.SetColor("_Color",  Random.ColorHSV());
+            argsBuffer = new GraphicsBuffer(GraphicsBuffer.Target.IndirectArguments, 1, args.Length * sizeof(uint));
         }
 
         void Update()
         {
-            // メッシュをインスタンシング
             RenderInstancedMesh();
         }
 
         void OnDisable()
         {
-            // 引数バッファを解放
             if (argsBuffer != null)
                 argsBuffer.Release();
             argsBuffer = null;
@@ -60,38 +53,37 @@ namespace BoidsSimulation
         #region Private Functions
         void RenderInstancedMesh()
         {
-            // 描画用マテリアルがNull, または, GPUBoidsスクリプトがNull,
-            // またはGPUインスタンシングがサポートされていなければ, 処理をしない
-            if (InstanceRenderMaterial == null || BoidsCS == null ||
+            if (_material == null || BoidsCS == null ||
                 !SystemInfo.supportsInstancing)
                 return;
 
-            // 指定したメッシュのインデックス数を取得
-            uint numIndices = (InstanceMesh != null) ?
-                (uint)InstanceMesh.GetIndexCount(0) : 0;
-            args[0] = numIndices; // メッシュのインデックス数をセット
-            args[1] = (uint)BoidsCS.GetMaxObjectNum(); // インスタンス数をセット
-            argsBuffer.SetData(args); // バッファにセット
+            // mesh index number
+            uint meshIndex = (_mesh != null) ?
+                (uint)_mesh.GetIndexCount(0) : 0;
+            args[0] = meshIndex; // set mesh index
+            args[1] = (uint)BoidsCS.GetMaxObjectNum(); // set instance number
+            argsBuffer.SetData(args); 
 
-            // Boidデータを格納したバッファをマテリアルにセット
-            InstanceRenderMaterial.SetBuffer("_BoidDataBuffer",
+            // Set the buffer containing the Boid data to the material.
+            _material.SetBuffer("_BoidDataBuffer",
                 BoidsCS.GetBoidDataBuffer());
-            // Boidオブジェクトスケールをセット
-            InstanceRenderMaterial.SetVector("_ObjectScale", ObjectScale);
-            // 境界領域を定義
+            // Set Boid object scale.
+            _material.SetVector("_ObjectScale", ObjectScale);
+            // Define boundary area.
             var bounds = new Bounds
             (
-                BoidsCS.GetSimulationAreaCenter(), // 中心
-                BoidsCS.GetSimulationAreaSize()    // サイズ
+                BoidsCS.GetSimulationAreaCenter(), 
+                BoidsCS.GetSimulationAreaSize()    
             );
-            // メッシュをGPUインスタンシングして描画
+            
+            //GPU instancing
             Graphics.DrawMeshInstancedIndirect
             (
-                InstanceMesh,           // インスタンシングするメッシュ
-                0,                      // submeshのインデックス
-                InstanceRenderMaterial, // 描画を行うマテリアル 
-                bounds,                 // 境界領域
-                argsBuffer              // GPUインスタンシングのための引数のバッファ 
+                _mesh,           
+                0,                      
+                _material, 
+                bounds,                 
+                argsBuffer              
             );
         }
         #endregion

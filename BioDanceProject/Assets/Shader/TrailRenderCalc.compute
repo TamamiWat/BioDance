@@ -1,0 +1,56 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel Update
+#pragma kernel Write2Input
+
+
+struct Particle
+{
+    float3 position;
+};
+
+struct Output
+{
+    float3 position;
+};
+
+RWStructuredBuffer<Particle> _ParticleBufferWrite;
+uint _ParticleNum;
+//float _Time;
+//float _TimeScale;
+//float _PositionScale;
+//float _NoiseScale;
+
+[numthreads(256,1,1)]
+void Update (uint3 id : SV_DispatchThreadID)
+{
+    // TODO: insert actual code here!
+    uint idx = id.x;
+    if(idx < _ParticleNum)
+    {
+        Particle particle = _ParticleBufferWrite[idx];
+
+        //particleの位置計算ロジックを追加
+
+
+        _ParticleBufferWrite[idx] = particle;
+
+    }
+    
+}
+
+StructuredBuffer<Particle> _ParticleBufferRead;
+RWStructuredBuffer<Output> _OutputBuffer;
+
+[numthreads(256,1,1)]
+void Write2Input (uint3 id : SV_DispatchThreadID)
+{
+    // TODO: insert actual code here!
+    uint idx = id.x;
+    if(idx < _ParticleNum)
+    {
+        Output output;
+        output.position = _ParticleBufferRead[idx].position;
+        _OutputBuffer[idx] = output;
+
+    }
+}

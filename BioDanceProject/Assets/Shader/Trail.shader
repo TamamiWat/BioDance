@@ -8,6 +8,8 @@ Shader"Custom/Trail"
         _ScaleY ("Scale Y", Float) = 1
         _Speed ("Speed", Float) = 1
         _Life ("Life", Float) = 10
+        _StartColor ("StartColor", Color) = (1, 1, 1, 1)
+        _EndColor("EndColor", Color) = (0, 0, 0, 1)
     }
     CGINCLUDE
         #include "UnityCG.cginc"
@@ -15,7 +17,7 @@ Shader"Custom/Trail"
 
         struct appdata
         {
-            uint vertex : SV_VetexID;
+            uint vertex : SV_VertexID;
         };
 
         struct v2f
@@ -38,19 +40,21 @@ Shader"Custom/Trail"
         float _Speed;
         float3 _TapPos;
         float _Life;
+        float4 _StartColor;
+        float4 _EndColor;
+
 
 
         v2f vert (appdata v)
         {
-            float div = (float) id / _VertexNum;
-            float3 pos = _UserInputBuffer[v.vertex];
-            float4 position = float4((div - 0.5) * _ScaleX + _TapPos.x,
-                                        sin(div * 2 * PI + _Time.y * _Speed) * _ScaleY + _TapPos.y,
-                                            _TapPos.z, 1);
+            uint id = v.vertex;
+            float3 pos = _UserInputBuffer[id].pos;
+            float4 position = float4(pos, 1);
             //float4 pos = _TapPos;
     
             v2f o;
             o.vertex = UnityObjectToClipPos(position);
+            o.color = _Color;
             return o;
         }
         
@@ -65,9 +69,15 @@ Shader"Custom/Trail"
         Tags { "RenderType"="Opaque" }
         Pass
         {
+            Cull Off
+            Lighting Off
+            BlendOp Add, Add
+            Blend One One, One One
+            ZWrite On
+            ZTest Always
             CGPROGRAM
 
-            #pragma target 3.5
+            #pragma target 5.0
             #pragma vertex vert
             //#pragma geometry geom
             #pragma fragment frag
