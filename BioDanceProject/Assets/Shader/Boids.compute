@@ -82,6 +82,8 @@ float _valMax;
 
 
 //User Position
+bool _userDrag;
+bool _userInOut;
 float3 _TapPos;
 float3 _DragPos;
 
@@ -164,6 +166,30 @@ float3 calcCoulombForce(float3 direction, float weight, float distance, float3 s
     outForce = limit(outForce, _MaxSteerForce);
     outForce *= weight;
     return outForce;
+}
+
+float calcHue(float3 sep, float3 ali, float3 coh)
+{
+    float hueRange = _hueMax - _hueMin;
+    float section = hueRange / 3.0;
+    float s = length(sep);
+    float a = length(ali);
+    float c = length(coh);
+    float f = max(max(s, a), c);
+    float hue = _hueMin;
+
+    if(f == s) 
+    {
+        hue +=  (1 / s)*section + 0*section;
+    }
+    else if(f == a)
+    {
+        hue +=  (1 / a)*section + 1*section;
+    }else
+    {
+        hue +=  (1 / c)*section + 2*section;
+    }
+    return hue;
 }
 
 //shared memory
@@ -276,24 +302,26 @@ void SteerForceCalculator
     
     //Avoidance
     float3 avoForce = (float3) 0.0;
+    if(_userInOut)
+    {
+
+    }
 	
 	//Attraction
     float3 attForce = (float3) 0.0;   
-    if (_TapPos.z != 0.0)
+    if (_userDrag)
     {
-        float distance = length(_TapPos - self_Position);
-        float3 direction = normalize(_TapPos - self_Position);
+        float distance = length(_DragPos - self_Position);
+        float3 direction = normalize(_DragPos - self_Position);
         float yaw = atan2(direction.z, direction.x);
         float length_xy = sqrt(direction.x * direction.x + direction.y * direction.y);
         float pitch = atan2(direction.z, length_xy);
         
         float limitRad = 0.78;
         float forceWeight = 10.0;
-        if (distance < 100.0 && abs(yaw) < limitRad && abs(pitch) < limitRad)
+        if (distance < _AttractRange && abs(yaw) < limitRad && abs(pitch) < limitRad)
         {
             attForce = direction;
-			
-            //attForce *= forceWeight;
             attForce = calcCoulombForce(direction, forceWeight, distance, self_Velocity);
 
         }
@@ -319,7 +347,8 @@ void MotionCalculator
 	uint3 id : SV_DispatchThreadID 
 )
 {
-	const unsigned int P_ID = id.x;          //get index
+	const unsigned int P_ID = id.x;   //get index
+    float hueRange = _hueMax - _hueMin;       
 											           
 	BoidData currentData = _BoidDataBufferWrite[P_ID];   //read current Boids Data
 	float3 force = _BoidForceBufferRead[P_ID]; //read steer force
@@ -328,7 +357,8 @@ void MotionCalculator
 
 	// Colour change based on speed orientation.
     float alpha = clamp(0, 1, 1 - 1 / length(velocity));
-    float hue = clamp(velocity.x / _MaxSpeed, _hueMin, _hueMax);
+    //float hue = calcHue(currentForce.separation, currentForce.aligment, currentForce.cohesion);
+    float hue = clamp((velocity.x*2 )/ _MaxSpeed, _hueMin, _hueMax);
     float saturation = clamp( velocity.y / _MaxSpeed, _satMin, _satMax);
     float value = clamp(velocity.z / _MaxSpeed, _valMin, _valMax);
     float3 rgb = hsv2rgb(float3(hue, saturation, value));
@@ -336,14 +366,19 @@ void MotionCalculator
 
 	force += limitBoundry(currentData.position) * _AvoidFrameWeight;
 
+    float speedBias = 1.5;
+    float dis = length(_DragPos - currentData.position);
+    if(_userDrag && dis < _AttractRange / 10){
+        
+        //speedBias *= dis*dis;
+        speedBias = lerp(0.1, 1.0, dis / _AttractRange);
+    }
+
 	currentData.velocity += force * _DeltaTime;          //apply steer force to velocity
 
-	currentData.velocity = limitVelocity(currentData.velocity, _MaxSpeed, _MinSpeed); 
+	currentData.velocity = limitVelocity(currentData.velocity, _MaxSpeed *speedBias, _MinSpeed); 
 		//limit velocity
 	currentData.position += currentData.velocity * _DeltaTime;     //update position
-
-    //update color
-
 											           
 	_BoidDataBufferWrite[P_ID] = currentData;           //update Boids data
 }

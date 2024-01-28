@@ -68,12 +68,15 @@ namespace BoidsSimulation
         public Vector3 m_FrameCenter = Vector3.zero; //center position of frame
         public Vector3 m_FrameSize = new Vector3(32.0f, 32.0f, 32.0f); //frame size
         [Range(0f, 100f)] public float m_FrameRadius = 0f;
+        [Range(0f, 100f)] public float m_AttractRange = 10f;
         [Range(0f, 1f)] public float m_hueMin = 0.0f;
         [Range(0f, 1f)] public float m_hueMax = 1.0f;
         [Range(0f, 1f)] public float m_satMin = 0.0f;
         [Range(0f, 1f)] public float m_satMax = 1.0f;
         [Range(0f, 1f)] public float m_valMin = 0.0f;
         [Range(0f, 1f)] public float m_valMax = 1.0f;
+        public bool isUserDrag = false;
+        public bool isUserInOut = false;
         #endregion
 
         #region Built-in Resources
@@ -86,8 +89,8 @@ namespace BoidsSimulation
         ComputeBuffer _boidForceDataBuffer;
         private float m_range;
 
-        Vector3 m_tapPos;
-        Vector3 m_dragPos;
+        Vector3 m_userPos;
+
         #endregion
 
         #region Accessors
@@ -131,12 +134,6 @@ namespace BoidsSimulation
             ReleaseBuffer();
         }
 
-        void OnDrawGizmos()
-        {
-            // Wireframe drawing of simulation area for debugging
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawWireCube(m_FrameCenter, m_FrameSize);
-        }
         #endregion
 
         #region Self-defined functions
@@ -182,12 +179,23 @@ namespace BoidsSimulation
         // simulation
         void Simulation()
         {
+            m_userPos = Input.mousePosition;
+            m_userPos.z = 6.0f;
+            m_userPos = Camera.main.ScreenToWorldPoint(m_userPos);
+            if(Input.GetMouseButton(0))
+            {
+                isUserDrag = true;
+            }
+            if(Input.GetMouseButtonDown(0) || Input.GetMouseButtonUp(0))
+            {
+                isUserInOut = true;
+                Debug.Log(m_userPos); 
+            }
+
             ComputeShader boidCS = BoidsCS;
             int id = -1;
-
-            
             int threadGroupSize = Mathf.CeilToInt(m_MaxObjectNum / SIMULATION_BLOCK_SIZE);
-            
+
             id = boidCS.FindKernel("SteerForceCalculator"); 
             boidCS.SetInt("_MaxBoidObjectNum", m_MaxObjectNum);
             boidCS.SetFloat("_CohesionNeighborhoodRadius", m_CohesionNeighborRadius);
@@ -202,17 +210,11 @@ namespace BoidsSimulation
             boidCS.SetVector("_FrameCenter", m_FrameCenter);
             boidCS.SetVector("_FrameSize", m_FrameSize);
             boidCS.SetFloat("_FrameRadius", m_FrameRadius);
-
-            if(Input.GetMouseButtonDown(0))
-            {
-                m_tapPos = Input.mousePosition;
-                //m_tapPos.z = m_FrameRadius / 2;
-                m_tapPos.z = 6.0f;
-                m_tapPos = Camera.main.ScreenToWorldPoint(m_tapPos);
-                Debug.Log(m_tapPos);
-                boidCS.SetVector("_TapPos", m_tapPos);
-            }
-            
+            boidCS.SetFloat("_AttractRange", m_AttractRange);
+            boidCS.SetVector("_DragPos", m_userPos);
+            boidCS.SetVector("_TapPos", m_userPos);
+            boidCS.SetBool("_userInOut", isUserInOut);  
+            boidCS.SetBool("_userDrag", isUserDrag);            
             boidCS.SetFloat("_AvoidFrameWeight", m_AvoidFrameWeight);
             boidCS.SetFloat("_CohesionAngle", m_CohesionAngle);
             boidCS.SetFloat("_AlignmentAngle", m_AligmentAngle);
@@ -234,7 +236,9 @@ namespace BoidsSimulation
             boidCS.SetBuffer(id, "_BoidForceBufferRead", _boidForceBuffer);
             boidCS.SetBuffer(id, "_BoidForceDataBufferRead", _boidForceDataBuffer);
             boidCS.SetBuffer(id, "_BoidDataBufferWrite", _boidDataBuffer);
-            boidCS.Dispatch(id, threadGroupSize, 1, 1); 
+            boidCS.Dispatch(id, threadGroupSize, 1, 1);
+            isUserInOut = false;
+            isUserDrag = false; 
         }
 
         // Release Buffer

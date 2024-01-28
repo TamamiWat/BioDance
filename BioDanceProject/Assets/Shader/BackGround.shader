@@ -84,10 +84,16 @@ Shader "Custom/BackGround"
 
                 float f = fbm(uv + r);
 
-                color = lerp(colA, colB, clamp((f*f)*5.256,1.552,3.432));
-                color = lerp(color, colC, clamp(length(q), 0.936, 2.032));
-                color = lerp(color, colD, clamp(length(r.x), 0.064, 1.392));
-                float4 result = float4((f*f*f + 0.200*f*f + 1.420*f)*color,1.0);
+                // color = lerp(colA, colB, clamp((f*f)*5.256,1.552,3.432));
+                // color = lerp(color, colC, clamp(length(q), 0.936, 2.032));
+                // color = lerp(color, colD, clamp(length(r.x), 0.064, 1.392));
+                // float4 result = float4((f*f*f + 0.200*f*f + 1.420*f)*color,1.0);
+                // return result;
+                color = lerp(colA, colB, clamp((f*f)*5.256, 0.0, 1.0));
+                color = lerp(color, colC, clamp(length(q), 0.0, 1.0));
+                color = lerp(color, colD, clamp(length(r.x), 0.0, 1.0));
+                color = clamp(color, 0.0, 1.0); // 追加：色の成分をクランプ
+                float4 result = float4(clamp((f*f*f + 0.200*f*f + 1.420*f), 0.0, 1.0) * color, 1.0);
                 return result;
             }
             
