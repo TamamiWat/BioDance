@@ -13,6 +13,7 @@ namespace BoidsSimulation
         {
             public Vector3 Velocity; 
             public Vector3 Position; 
+            public Vector4 Color;
         }
    
         const int SIMULATION_BLOCK_SIZE = 256;
@@ -136,11 +137,15 @@ namespace BoidsSimulation
             var forceArr = new Vector3[m_MaxObjectNum];
             var boidDataArr = new BoidData[m_MaxObjectNum];
             m_range = m_FrameSize.x / 2;
+
             for (var i = 0; i < m_MaxObjectNum; i++)
             {
+                Vector4 initColor = new Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+
                 forceArr[i] = Vector3.zero;
                 boidDataArr[i].Position = RandomVector(-m_range, m_range);
                 boidDataArr[i].Velocity = Random.insideUnitSphere * 1.0f;
+                boidDataArr[i].Color = initColor;
             }
             _boidForceBuffer.SetData(forceArr);
             _boidDataBuffer.SetData(boidDataArr);

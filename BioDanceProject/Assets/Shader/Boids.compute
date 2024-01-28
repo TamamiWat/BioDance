@@ -7,6 +7,7 @@ struct BoidData
 {
 	float3 velocity;
 	float3 position;
+    float4 color;
 };
 
 /*
@@ -295,7 +296,23 @@ void MotionCalculator
 											           
 	BoidData currentData = _BoidDataBufferWrite[P_ID];   //read current Boids Data
 	float3 force = _BoidForceBufferRead[P_ID]; //read steer force
-	
+
+    float3 velocity = currentData.velocity; // current velocity
+
+	// Colour change based on speed orientation.
+    float redIntensity = velocity.x > 0 ? abs(velocity.x) : 0.0;
+    float greenIntensity = velocity.y > 0 ? abs(velocity.y) : 0.0;
+    float blueIntensity = velocity.z > 0 ? abs(velocity.z) : 0.0;
+    // Normalised colour intensity
+    float maxIntensity = max(max(redIntensity, greenIntensity), blueIntensity);
+    if (maxIntensity > 0)
+    {
+        redIntensity /= maxIntensity;
+        greenIntensity /= maxIntensity;
+        blueIntensity /= maxIntensity;
+    }
+    currentData.color = float4(redIntensity, greenIntensity, blueIntensity, 0.5);
+
 	force += limitBoundry(currentData.position) * _AvoidFrameWeight;
 
 	currentData.velocity += force * _DeltaTime;          //apply steer force to velocity
@@ -303,6 +320,9 @@ void MotionCalculator
 	currentData.velocity = limitVelocity(currentData.velocity, _MaxSpeed, _MinSpeed); 
 		//limit velocity
 	currentData.position += currentData.velocity * _DeltaTime;     //update position
+
+    //update color
+
 											           
 	_BoidDataBufferWrite[P_ID] = currentData;           //update Boids data
 }
