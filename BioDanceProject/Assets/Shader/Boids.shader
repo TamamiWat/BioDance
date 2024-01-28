@@ -40,11 +40,6 @@ Shader "Custom/Boids"
             UNITY_VERTEX_INPUT_INSTANCE_ID
         };
 
-        UNITY_INSTANCING_BUFFER_START(Props)
-                // メッシュごとに変えるプロパティはここに定義する
-                UNITY_DEFINE_INSTANCED_PROP(float4, _Color)
-            UNITY_INSTANCING_BUFFER_END(Props)
-
         //fixed4 _Color;
         float3 _ObjectScale;
         sampler2D _MainTex;
@@ -91,7 +86,7 @@ Shader "Custom/Boids"
         fixed4 frag(v2f i) : SV_Target
         {
             float4 col = i.color;
-            col.a *= 0.2;
+            //col.a *= 0.5;
             return col;
         }
     ENDCG
@@ -99,7 +94,7 @@ Shader "Custom/Boids"
     SubShader
     {
         Tags { "RenderType"="Transparent" }
-        Blend OneMinusDstColor One
+        Blend One OneMinusSrcAlpha
         LOD 200
         Pass{
             CGPROGRAM

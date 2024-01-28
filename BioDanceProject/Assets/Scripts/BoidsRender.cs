@@ -26,14 +26,11 @@ namespace BoidsSimulation
         // Start index position, base vertex position, start position of instance
         uint[] args = new uint[5] { 0, 0, 0, 0, 0 };
         GraphicsBuffer argsBuffer;
-        MaterialPropertyBlock props;
         #endregion
 
         #region MonoBehaviour Functions
         void Start()
         {
-            props = new MaterialPropertyBlock();
-            props.SetColor("_Color",  Random.ColorHSV());
             argsBuffer = new GraphicsBuffer(GraphicsBuffer.Target.IndirectArguments, 1, args.Length * sizeof(uint));
         }
 

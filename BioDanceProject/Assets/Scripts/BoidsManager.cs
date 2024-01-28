@@ -15,6 +15,15 @@ namespace BoidsSimulation
             public Vector3 Position; 
             public Vector4 Color;
         }
+
+        struct Force
+        {
+            public Vector3 separation;
+            public Vector3 aligment;
+            public Vector3 cohesion;
+            public Vector3 attraction;
+            public Vector3 avoidance;
+        }
    
         const int SIMULATION_BLOCK_SIZE = 256;
 
@@ -59,6 +68,12 @@ namespace BoidsSimulation
         public Vector3 m_FrameCenter = Vector3.zero; //center position of frame
         public Vector3 m_FrameSize = new Vector3(32.0f, 32.0f, 32.0f); //frame size
         [Range(0f, 100f)] public float m_FrameRadius = 0f;
+        [Range(0f, 1f)] public float m_hueMin = 0.0f;
+        [Range(0f, 1f)] public float m_hueMax = 1.0f;
+        [Range(0f, 1f)] public float m_satMin = 0.0f;
+        [Range(0f, 1f)] public float m_satMax = 1.0f;
+        [Range(0f, 1f)] public float m_valMin = 0.0f;
+        [Range(0f, 1f)] public float m_valMax = 1.0f;
         #endregion
 
         #region Built-in Resources
@@ -68,6 +83,7 @@ namespace BoidsSimulation
         #region Private Resources
         ComputeBuffer _boidForceBuffer;
         ComputeBuffer _boidDataBuffer;
+        ComputeBuffer _boidForceDataBuffer;
         private float m_range;
 
         Vector3 m_tapPos;
@@ -132,10 +148,13 @@ namespace BoidsSimulation
                 Marshal.SizeOf(typeof(BoidData)));
             _boidForceBuffer = new ComputeBuffer(m_MaxObjectNum,
                 Marshal.SizeOf(typeof(Vector3)));
+            _boidForceDataBuffer = new ComputeBuffer(m_MaxObjectNum,
+                Marshal.SizeOf(typeof(Force)));
 
             // init BoidsData, SteerForce Buffer
             var forceArr = new Vector3[m_MaxObjectNum];
             var boidDataArr = new BoidData[m_MaxObjectNum];
+            var boidForceDataArr = new Force[m_MaxObjectNum];
             m_range = m_FrameSize.x / 2;
 
             for (var i = 0; i < m_MaxObjectNum; i++)
@@ -146,11 +165,18 @@ namespace BoidsSimulation
                 boidDataArr[i].Position = RandomVector(-m_range, m_range);
                 boidDataArr[i].Velocity = Random.insideUnitSphere * 1.0f;
                 boidDataArr[i].Color = initColor;
+                boidForceDataArr[i].separation = Vector3.zero;
+                boidForceDataArr[i].aligment = Vector3.zero;
+                boidForceDataArr[i].cohesion = Vector3.zero;
+                boidForceDataArr[i].attraction = Vector3.zero;
+                boidForceDataArr[i].avoidance = Vector3.zero;
             }
             _boidForceBuffer.SetData(forceArr);
             _boidDataBuffer.SetData(boidDataArr);
+            _boidForceDataBuffer.SetData(boidForceDataArr);
             forceArr = null;
             boidDataArr = null;
+            boidForceDataArr = null;
         }
 
         // simulation
@@ -161,7 +187,6 @@ namespace BoidsSimulation
 
             
             int threadGroupSize = Mathf.CeilToInt(m_MaxObjectNum / SIMULATION_BLOCK_SIZE);
-
             
             id = boidCS.FindKernel("SteerForceCalculator"); 
             boidCS.SetInt("_MaxBoidObjectNum", m_MaxObjectNum);
@@ -177,6 +202,7 @@ namespace BoidsSimulation
             boidCS.SetVector("_FrameCenter", m_FrameCenter);
             boidCS.SetVector("_FrameSize", m_FrameSize);
             boidCS.SetFloat("_FrameRadius", m_FrameRadius);
+
             if(Input.GetMouseButtonDown(0))
             {
                 m_tapPos = Input.mousePosition;
@@ -191,14 +217,22 @@ namespace BoidsSimulation
             boidCS.SetFloat("_CohesionAngle", m_CohesionAngle);
             boidCS.SetFloat("_AlignmentAngle", m_AligmentAngle);
             boidCS.SetFloat("_SeparationAngle", m_SeparationAngle);
+            boidCS.SetFloat("_hueMin", m_hueMin);
+            boidCS.SetFloat("_hueMax", m_hueMax);
+            boidCS.SetFloat("_satMin", m_satMin);
+            boidCS.SetFloat("_satMax", m_satMax);
+            boidCS.SetFloat("_valMin", m_valMin);
+            boidCS.SetFloat("_valMax", m_valMax);
             boidCS.SetBuffer(id, "_BoidDataBufferRead", _boidDataBuffer);
             boidCS.SetBuffer(id, "_BoidForceBufferWrite", _boidForceBuffer);
+            boidCS.SetBuffer(id, "_BoidForceDataBufferWrite", _boidForceDataBuffer);
             boidCS.Dispatch(id, threadGroupSize, 1, 1); 
 
             
             id = boidCS.FindKernel("MotionCalculator");
             boidCS.SetFloat("_DeltaTime", Time.deltaTime);
             boidCS.SetBuffer(id, "_BoidForceBufferRead", _boidForceBuffer);
+            boidCS.SetBuffer(id, "_BoidForceDataBufferRead", _boidForceDataBuffer);
             boidCS.SetBuffer(id, "_BoidDataBufferWrite", _boidDataBuffer);
             boidCS.Dispatch(id, threadGroupSize, 1, 1); 
         }
@@ -216,6 +250,12 @@ namespace BoidsSimulation
             {
                 _boidForceBuffer.Release();
                 _boidForceBuffer = null;
+            }
+
+            if(_boidForceDataBuffer != null)
+            {
+                _boidForceDataBuffer.Release();
+                _boidForceDataBuffer = null;
             }
         }
 
