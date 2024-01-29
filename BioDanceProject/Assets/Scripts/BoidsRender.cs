@@ -8,7 +8,7 @@ namespace BoidsSimulation
     public class BoidsRender : MonoBehaviour
     {
         #region Paremeters
-        public Vector3 ObjectScale = new Vector3(0.1f, 0.2f, 0.5f);
+        //public Vector3 ObjectScale = new Vector3(0.1f, 0.2f, 0.5f);
         #endregion
 
         #region Script References
@@ -65,7 +65,7 @@ namespace BoidsSimulation
             _material.SetBuffer("_BoidDataBuffer",
                 BoidsCS.GetBoidDataBuffer());
             // Set Boid object scale.
-            _material.SetVector("_ObjectScale", ObjectScale);
+            //_material.SetVector("_ObjectScale", ObjectScale);
             // Define boundary area.
             var bounds = new Bounds
             (

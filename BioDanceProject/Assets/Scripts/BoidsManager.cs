@@ -14,6 +14,7 @@ namespace BoidsSimulation
             public Vector3 Velocity; 
             public Vector3 Position; 
             public Vector4 Color;
+            public Vector3 Scale;
         }
 
         struct Force
@@ -162,6 +163,7 @@ namespace BoidsSimulation
                 boidDataArr[i].Position = RandomVector(-m_range, m_range);
                 boidDataArr[i].Velocity = Random.insideUnitSphere * 1.0f;
                 boidDataArr[i].Color = initColor;
+                boidDataArr[i].Scale = RandomVector(0.2f, 0.8f);
                 boidForceDataArr[i].separation = Vector3.zero;
                 boidForceDataArr[i].aligment = Vector3.zero;
                 boidForceDataArr[i].cohesion = Vector3.zero;

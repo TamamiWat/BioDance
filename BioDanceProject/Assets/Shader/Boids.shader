@@ -17,6 +17,7 @@ Shader "Custom/Boids"
             float3 velocity;
             float3 position;
             float4 color;
+            float3 scale;
         };
 
 		StructuredBuffer<BoidData> _BoidDataBuffer;
@@ -55,7 +56,7 @@ Shader "Custom/Boids"
             float4x4 o2w = (float4x4)0;
             BoidData boidData = _BoidDataBuffer[id];
             float3 pos = boidData.position;
-            float3 scale = _ObjectScale;
+            float3 scale = boidData.scale;
 
             // Define a matrix to convert from object coordinates to world coordinates
             

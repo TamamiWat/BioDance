@@ -9,6 +9,7 @@ struct BoidData
 	float3 velocity;
 	float3 position;
     float4 color;
+    float3 scale;
 };
 
 struct ForceData
@@ -366,19 +367,26 @@ void MotionCalculator
 
 	force += limitBoundry(currentData.position) * _AvoidFrameWeight;
 
-    float speedBias = 1.5;
     float dis = length(_DragPos - currentData.position);
-    if(_userDrag && dis < _AttractRange / 10){
-        
-        //speedBias *= dis*dis;
-        speedBias = lerp(0.1, 1.0, dis / _AttractRange);
+    
+    if (_userDrag)
+    {
+        if (dis < _AttractRange)
+        {
+            if (dis < _AttractRange * 0.1)
+            {
+                currentData.velocity *= 0.1; 
+            }
+            else
+            {
+                float3 directionToDrag = normalize(_DragPos - currentData.position);
+                force += directionToDrag * _MaxSteerForce * (1.0 - dis / _AttractRange);
+            }
+        }
     }
+    currentData.velocity += force * _DeltaTime;
+    currentData.velocity = limitVelocity(currentData.velocity, _MaxSpeed, _MinSpeed);
+    currentData.position += currentData.velocity * _DeltaTime;
 
-	currentData.velocity += force * _DeltaTime;          //apply steer force to velocity
-
-	currentData.velocity = limitVelocity(currentData.velocity, _MaxSpeed *speedBias, _MinSpeed); 
-		//limit velocity
-	currentData.position += currentData.velocity * _DeltaTime;     //update position
-											           
-	_BoidDataBufferWrite[P_ID] = currentData;           //update Boids data
+    _BoidDataBufferWrite[P_ID] = currentData; 
 }
