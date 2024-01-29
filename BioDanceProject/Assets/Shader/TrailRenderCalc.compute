@@ -1,56 +1,47 @@
-// Each #kernel tells which function to compile; you can have many kernels
-#pragma kernel Update
-#pragma kernel Write2Input
-
+#pragma kernel CalcLorenz
 
 struct Particle
 {
     float3 position;
+    float3 velocity;
+    float lifetime;
 };
 
-struct Output
-{
-    float3 position;
-};
+/*
+**set from CPU
+*/
+RWStructuredBuffer<Particle> _particle;
+float _deltaTime;
+float _dragTime;
+float3 _dragPos;
 
-RWStructuredBuffer<Particle> _ParticleBufferWrite;
-uint _ParticleNum;
-//float _Time;
-//float _TimeScale;
-//float _PositionScale;
-//float _NoiseScale;
+//Lorenz Parameters
+float _p;
+float _r;
+float _b;
+
 
 [numthreads(256,1,1)]
-void Update (uint3 id : SV_DispatchThreadID)
+void CalcLorenz (uint3 id : SV_DispatchThreadID)
 {
-    // TODO: insert actual code here!
-    uint idx = id.x;
-    if(idx < _ParticleNum)
+    uint index = id.x;
+    Particle particle = _particle[index];
+    float3 vel = particle.velocity;
+
+    //calc lorenz
+    vel.x += _deltaTime * (-_p * particle.position.x + _p * particle.position.y);
+    vel.y += _deltaTime * (-particle.position.x * particle.position.z + _r * particle.position.x - particle.position.y);
+    vel.z += vel.z += _deltaTime * (particle.position.x * particle.position.y - _b * particle.position.z);
+
+    particle.position += vel * _deltaTime;
+
+    if(_dragTime > 0)
     {
-        Particle particle = _ParticleBufferWrite[idx];
-
-        //particleの位置計算ロジックを追加
-
-
-        _ParticleBufferWrite[idx] = particle;
-
+        float3 direction = normalize(_dragPos - particle.position);
+        vel += direction * _dragTime * 0.1;
     }
-    
-}
 
-StructuredBuffer<Particle> _ParticleBufferRead;
-RWStructuredBuffer<Output> _OutputBuffer;
+    particle.lifetime -= _deltaTime;
+    _particle[index] = particle;
 
-[numthreads(256,1,1)]
-void Write2Input (uint3 id : SV_DispatchThreadID)
-{
-    // TODO: insert actual code here!
-    uint idx = id.x;
-    if(idx < _ParticleNum)
-    {
-        Output output;
-        output.position = _ParticleBufferRead[idx].position;
-        _OutputBuffer[idx] = output;
-
-    }
 }

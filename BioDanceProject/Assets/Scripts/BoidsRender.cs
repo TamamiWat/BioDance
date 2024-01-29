@@ -25,13 +25,13 @@ namespace BoidsSimulation
         // number of indexes per instance, number of instances,. 
         // Start index position, base vertex position, start position of instance
         uint[] args = new uint[5] { 0, 0, 0, 0, 0 };
-        GraphicsBuffer argsBuffer;
+        GraphicsBuffer _argsBuffer;
         #endregion
 
         #region MonoBehaviour Functions
         void Start()
         {
-            argsBuffer = new GraphicsBuffer(GraphicsBuffer.Target.IndirectArguments, 1, args.Length * sizeof(uint));
+            _argsBuffer = new GraphicsBuffer(GraphicsBuffer.Target.IndirectArguments, 1, args.Length * sizeof(uint));
         }
 
         void Update()
@@ -41,9 +41,9 @@ namespace BoidsSimulation
 
         void OnDisable()
         {
-            if (argsBuffer != null)
-                argsBuffer.Release();
-            argsBuffer = null;
+            if (_argsBuffer != null)
+                _argsBuffer.Release();
+            _argsBuffer = null;
         }
         #endregion
 
@@ -59,7 +59,7 @@ namespace BoidsSimulation
                 (uint)_mesh.GetIndexCount(0) : 0;
             args[0] = meshIndex; // set mesh index
             args[1] = (uint)BoidsCS.GetMaxObjectNum(); // set instance number
-            argsBuffer.SetData(args); 
+            _argsBuffer.SetData(args); 
 
             // Set the buffer containing the Boid data to the material.
             _material.SetBuffer("_BoidDataBuffer",
@@ -80,7 +80,7 @@ namespace BoidsSimulation
                 0,                      
                 _material, 
                 bounds,                 
-                argsBuffer              
+                _argsBuffer              
             );
         }
         #endregion

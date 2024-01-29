@@ -37,7 +37,6 @@ Shader "Custom/Boids"
             float4 vertex : SV_POSITION;
             float2 uv : TEXCOORD0;
             float4 color : COLOR;
-            UNITY_FOG_COORDS(1)
             UNITY_VERTEX_INPUT_INSTANCE_ID
         };
 
