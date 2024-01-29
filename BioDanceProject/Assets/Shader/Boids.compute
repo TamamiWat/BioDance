@@ -70,7 +70,7 @@ float _AttractAngleRange;
 float _AttractRange;
 float _AttractForceWeight;
 float _AvoidRange;
-float _EscapeRange;
+float _AvoidForceWeight;
 
 //HSV
 float _hueMin;
@@ -305,6 +305,19 @@ void SteerForceCalculator
     float3 avoForce = (float3) 0.0;
     if(_userInOut)
     {
+        float distance = length(_TapPos - self_Position);
+        float3 direction = normalize(_TapPos - self_Position);
+        float yaw = atan2(direction.z, direction.x);
+        float length_xy = sqrt(direction.x * direction.x + direction.y * direction.y);
+        float pitch = atan2(direction.z, length_xy);
+        
+        float limitRad = 0.78;
+        if (distance < _AvoidRange && abs(yaw) < limitRad && abs(pitch) < limitRad)
+        {
+            avoForce = direction;
+            avoForce = -calcCoulombForce(direction, _AvoidForceWeight, distance, self_Velocity);
+
+        }
 
     }
 	
@@ -318,12 +331,11 @@ void SteerForceCalculator
         float length_xy = sqrt(direction.x * direction.x + direction.y * direction.y);
         float pitch = atan2(direction.z, length_xy);
         
-        float limitRad = 0.78;
-        float forceWeight = 10.0;
+        float limitRad = 1.0;
         if (distance < _AttractRange && abs(yaw) < limitRad && abs(pitch) < limitRad)
         {
             attForce = direction;
-            attForce = calcCoulombForce(direction, forceWeight, distance, self_Velocity);
+            attForce = calcCoulombForce(direction, _AttractForceWeight, distance, self_Velocity);
 
         }
     }
@@ -383,6 +395,9 @@ void MotionCalculator
                 force += directionToDrag * _MaxSteerForce * (1.0 - dis / _AttractRange);
             }
         }
+    }
+    if(_userInOut){
+
     }
     currentData.velocity += force * _DeltaTime;
     currentData.velocity = limitVelocity(currentData.velocity, _MaxSpeed, _MinSpeed);

@@ -329,6 +329,7 @@ GameObject:
   - component: {fileID: 329989362}
   - component: {fileID: 329989368}
   - component: {fileID: 329989367}
+  - component: {fileID: 329989369}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -543,6 +544,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &329989369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 329989361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6900d38ba5a2650488cf6278f8a12891, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &428010781
 GameObject:
   m_ObjectHideFlags: 0
@@ -784,7 +797,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84b3aa97fe0480c4b9c3a6ac45ac2af4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObjectScale: {x: 0.1, y: 0.2, z: 0.5}
   BoidsCS: {fileID: 2000106474}
   _mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
   _material: {fileID: 2100000, guid: 081e9e2662a088b44913c5f5a03f3b06, type: 2}
@@ -824,8 +836,10 @@ MonoBehaviour:
   m_satMax: 1
   m_valMin: 0.7
   m_valMax: 1
-  isUserDrag: 0
-  isUserInOut: 0
+  clips:
+  - {fileID: 8300000, guid: 37d756aa57068504f90c6e2f5537b58a, type: 3}
+  - {fileID: 8300000, guid: 42c408a576de132479611a996ebbbaba, type: 3}
+  - {fileID: 8300000, guid: 329ad5e72eaba9147a2339d8ee1ebda3, type: 3}
   BoidsCS: {fileID: 7200000, guid: 84ed23d66800e0742b46eb3ac0b6a3d2, type: 3}
 --- !u!4 &2000106475
 Transform:

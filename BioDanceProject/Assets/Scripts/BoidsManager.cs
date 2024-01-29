@@ -39,6 +39,8 @@ namespace BoidsSimulation
         public float m_AlignmentNeighborRadius = 0.5f;//apply ALIGNMENT
         [Range(0f, 10f)]
         public float m_SeparationNeighborRadius = 0.03f;//apply SEPARATION
+        [Range(0f, 100f)] public float m_AttractRange = 10f; //attraction
+        [Range(0f, 100f)] public float m_AvoidRange = 8f; //avoidance
 
         [Range(0f, 10f)]
         public float m_MaxSpeed = 5.0f;  //Max Speed
@@ -54,6 +56,10 @@ namespace BoidsSimulation
         public float m_AlignmentWeight = 0.01f; //Alignment force
         [Range(0f, 100f)]
         public float m_SeparationWeight = 0.5f; //Separation force
+        [Range(0f, 100f)]
+        public float m_AttractWeight = 10.0f;
+        [Range(0f, 100f)]
+        public float m_AvoidWeight = 12.0f;
 
         [Range(0f, 100f)]
         public float m_AvoidFrameWeight = 0.2f; //Weight for avoiding frame 
@@ -69,15 +75,15 @@ namespace BoidsSimulation
         public Vector3 m_FrameCenter = Vector3.zero; //center position of frame
         public Vector3 m_FrameSize = new Vector3(32.0f, 32.0f, 32.0f); //frame size
         [Range(0f, 100f)] public float m_FrameRadius = 0f;
-        [Range(0f, 100f)] public float m_AttractRange = 10f;
+        
         [Range(0f, 1f)] public float m_hueMin = 0.0f;
         [Range(0f, 1f)] public float m_hueMax = 1.0f;
         [Range(0f, 1f)] public float m_satMin = 0.0f;
         [Range(0f, 1f)] public float m_satMax = 1.0f;
         [Range(0f, 1f)] public float m_valMin = 0.0f;
         [Range(0f, 1f)] public float m_valMax = 1.0f;
-        public bool isUserDrag = false;
-        public bool isUserInOut = false;
+        public AudioClip[] clips;
+        
         #endregion
 
         #region Built-in Resources
@@ -91,6 +97,9 @@ namespace BoidsSimulation
         private float m_range;
 
         Vector3 m_userPos;
+        private bool isUserDrag = false;
+        private bool isUserInOut = false;
+        private AudioSource audioSource;
 
         #endregion
 
@@ -121,12 +130,32 @@ namespace BoidsSimulation
         #region MonoBehaviour Functions
         void Start()
         {
+            audioSource = GetComponent<AudioSource>();
+            if (audioSource == null)
+            {
+                audioSource = gameObject.AddComponent<AudioSource>();
+            }
             //init Buffers
             InitBuffer();
         }
 
         void Update()
         {
+            isUserInOut = false;
+            isUserDrag = false;
+            m_userPos = Input.mousePosition;
+            m_userPos.z = 6.0f;
+            m_userPos = Camera.main.ScreenToWorldPoint(m_userPos);
+            if(Input.GetMouseButton(0))
+            {
+                isUserDrag = true;
+            }
+            if(Input.GetMouseButtonUp(0))
+            {
+                isUserInOut = true;
+                Debug.Log(m_userPos); 
+                PlayRandomSound();
+            }
             Simulation();
         }
 
@@ -181,19 +210,7 @@ namespace BoidsSimulation
         // simulation
         void Simulation()
         {
-            m_userPos = Input.mousePosition;
-            m_userPos.z = 6.0f;
-            m_userPos = Camera.main.ScreenToWorldPoint(m_userPos);
-            if(Input.GetMouseButton(0))
-            {
-                isUserDrag = true;
-            }
-            if(Input.GetMouseButtonDown(0) || Input.GetMouseButtonUp(0))
-            {
-                isUserInOut = true;
-                Debug.Log(m_userPos); 
-            }
-
+        
             ComputeShader boidCS = BoidsCS;
             int id = -1;
             int threadGroupSize = Mathf.CeilToInt(m_MaxObjectNum / SIMULATION_BLOCK_SIZE);
@@ -209,10 +226,13 @@ namespace BoidsSimulation
             boidCS.SetFloat("_SeparationWeight", m_SeparationWeight);
             boidCS.SetFloat("_CohesionWeight", m_CohesionWeight);
             boidCS.SetFloat("_AlignmentWeight", m_AlignmentWeight);
+            boidCS.SetFloat("_AttractForceWeight", m_AttractWeight);
+            boidCS.SetFloat("_AvoidForceWeight", m_AvoidWeight);
             boidCS.SetVector("_FrameCenter", m_FrameCenter);
             boidCS.SetVector("_FrameSize", m_FrameSize);
             boidCS.SetFloat("_FrameRadius", m_FrameRadius);
             boidCS.SetFloat("_AttractRange", m_AttractRange);
+            boidCS.SetFloat("_AvoidRange", m_AvoidRange);
             boidCS.SetVector("_DragPos", m_userPos);
             boidCS.SetVector("_TapPos", m_userPos);
             boidCS.SetBool("_userInOut", isUserInOut);  
@@ -239,8 +259,7 @@ namespace BoidsSimulation
             boidCS.SetBuffer(id, "_BoidForceDataBufferRead", _boidForceDataBuffer);
             boidCS.SetBuffer(id, "_BoidDataBufferWrite", _boidDataBuffer);
             boidCS.Dispatch(id, threadGroupSize, 1, 1);
-            isUserInOut = false;
-            isUserDrag = false; 
+             
         }
 
         // Release Buffer
@@ -272,6 +291,13 @@ namespace BoidsSimulation
                 Random.Range(min, max),
                 Random.Range(min, max)
             );
+        }
+
+        void PlayRandomSound()
+        {
+            int randomIndex = Random.Range(0, clips.Length);
+
+            audioSource.PlayOneShot(clips[randomIndex]);
         }
         #endregion
     } // class
