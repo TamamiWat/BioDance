@@ -396,9 +396,20 @@ void MotionCalculator
             }
         }
     }
-    if(_userInOut){
+    else if (_userInOut)
+    {
+        if (dis < _AvoidRange)
+        {
+            float3 directionFromDrag = normalize(currentData.position - _DragPos);
+            float forceMultiplier = 1.0 - (dis / _AvoidRange);
+            forceMultiplier = max(forceMultiplier, 0.1); 
 
+            forceMultiplier *= 5.0;
+
+            force += directionFromDrag * _MaxSteerForce * forceMultiplier;
+        }
     }
+
     currentData.velocity += force * _DeltaTime;
     currentData.velocity = limitVelocity(currentData.velocity, _MaxSpeed, _MinSpeed);
     currentData.position += currentData.velocity * _DeltaTime;

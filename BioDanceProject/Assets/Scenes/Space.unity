@@ -816,12 +816,16 @@ MonoBehaviour:
   m_CohesionNeighborRadius: 2
   m_AlignmentNeighborRadius: 2
   m_SeparationNeighborRadius: 1
+  m_AttractRange: 25
+  m_AvoidRange: 8
   m_MaxSpeed: 5
   m_MaxSteerForce: 0.5
   m_MinSpeed: 0.5
-  m_CohesionWeight: 4
-  m_AlignmentWeight: 7.8
-  m_SeparationWeight: 13.4
+  m_CohesionWeight: 10
+  m_AlignmentWeight: 15
+  m_SeparationWeight: 8
+  m_AttractWeight: 10
+  m_AvoidWeight: 12
   m_AvoidFrameWeight: 10
   m_CohesionAngle: 1.5
   m_AligmentAngle: 1.5
@@ -829,7 +833,6 @@ MonoBehaviour:
   m_FrameCenter: {x: 0, y: 0, z: 0}
   m_FrameSize: {x: 32, y: 32, z: 32}
   m_FrameRadius: 15.8
-  m_AttractRange: 15
   m_hueMin: 0.4
   m_hueMax: 0.95
   m_satMin: 0.7
