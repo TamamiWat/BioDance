@@ -31,7 +31,7 @@ void CalcLorenz (uint3 id : SV_DispatchThreadID)
     //calc lorenz
     vel.x += _deltaTime * (-_p * particle.position.x + _p * particle.position.y);
     vel.y += _deltaTime * (-particle.position.x * particle.position.z + _r * particle.position.x - particle.position.y);
-    vel.z += vel.z += _deltaTime * (particle.position.x * particle.position.y - _b * particle.position.z);
+    vel.z += _deltaTime * (particle.position.x * particle.position.y - _b * particle.position.z);
 
     particle.position += vel * _deltaTime;
 

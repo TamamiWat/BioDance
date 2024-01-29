@@ -51,6 +51,7 @@ public class DrawMeshOnDrag : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             isDragging = false;
+             matrices.Clear();
         }
 
         // ドラッグ中にインスタンスの位置を更新
@@ -63,6 +64,7 @@ public class DrawMeshOnDrag : MonoBehaviour
             // メッシュのインスタンスの変換行列を追加
             matrices.Add(Matrix4x4.TRS(worldPos, Quaternion.identity, Vector3.one));
         }
+        
 
         // インスタンスを描画
         if (matrices.Count > 0)

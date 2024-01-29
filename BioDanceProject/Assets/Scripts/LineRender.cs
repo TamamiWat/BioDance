@@ -57,6 +57,7 @@ public class LineRender : MonoBehaviour
         {
             isDragging = false;
             dragTime = 0f;
+            matrices.Clear();
         }
         if(isDragging){
             matrices.Add(Matrix4x4.TRS(dragPos, Quaternion.identity, Vector3.one));
@@ -115,7 +116,7 @@ public class LineRender : MonoBehaviour
                 !SystemInfo.supportsInstancing)
                 return;
         
-        UpdateArgsBuffer();
+        //UpdateArgsBuffer();
         
         if (matrices.Count > 0)
         {
